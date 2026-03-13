@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { searchEntities, fakeEntities } from '../../data/fakeEntities';
 import { useUIStore } from '../../store/uiStore';
+import { useHAStore } from '../../store/haStore';
+import type { HAEntity } from '../../types';
 
 interface EntityPickerFieldProps {
   value: string;
@@ -12,11 +14,36 @@ export function EntityPickerField({ value, onChange }: EntityPickerFieldProps) {
   const [search, setSearch] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { connected, entities: liveEntities } = useHAStore();
+
+  // Build entity list from live data or fallback to fakeEntities
+  const allEntities: HAEntity[] = useMemo(() => {
+    if (connected && liveEntities.length > 0) {
+      return liveEntities.map((e) => ({
+        entity_id: e.entity_id,
+        friendly_name: (e.attributes.friendly_name as string) || e.entity_id,
+        state: e.state,
+        domain: e.entity_id.split('.')[0],
+        attributes: e.attributes,
+      }));
+    }
+    return fakeEntities;
+  }, [connected, liveEntities]);
 
   const results = useMemo(() => {
-    if (!search.trim()) return fakeEntities.slice(0, 20);
+    if (!search.trim()) return allEntities.slice(0, 20);
+    if (connected && liveEntities.length > 0) {
+      const lower = search.toLowerCase();
+      return allEntities
+        .filter(
+          (e) =>
+            e.entity_id.toLowerCase().includes(lower) ||
+            e.friendly_name.toLowerCase().includes(lower)
+        )
+        .slice(0, 20);
+    }
     return searchEntities(search).slice(0, 20);
-  }, [search]);
+  }, [search, connected, liveEntities, allEntities]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -63,6 +90,12 @@ export function EntityPickerField({ value, onChange }: EntityPickerFieldProps) {
           ref={dropdownRef}
           className="absolute z-50 top-full left-0 right-0 mt-1 bg-ha-toolbar border border-ha-border rounded-lg shadow-xl max-h-48 overflow-y-auto"
         >
+          {connected && liveEntities.length > 0 && (
+            <div className="flex items-center gap-1 px-3 py-1 border-b border-ha-border bg-green-500/5">
+              <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
+              <span className="text-[9px] text-green-400">Live entities</span>
+            </div>
+          )}
           {results.map((entity) => (
             <button
               key={entity.entity_id}

@@ -1,18 +1,22 @@
 import { useState } from 'react';
-import { Download, Upload, FileCode, Eye, Save, FolderOpen, FileInput, LayoutTemplate } from 'lucide-react';
+import { Download, Upload, FileCode, Eye, Save, FolderOpen, FileInput, LayoutTemplate, Plug } from 'lucide-react';
 import { useDashboardStore } from '../../store/dashboardStore';
 import { useModuleStore } from '../../store/moduleStore';
+import { useHAStore } from '../../store/haStore';
 import { generateDashboardYAML } from '../../yaml/generator';
 import { ImportModal } from '../panels/ImportModal';
 import { TemplateLibrary } from '../panels/TemplateLibrary';
+import { HAConnectModal } from '../panels/HAConnectModal';
 import type { ProjectFile } from '../../types';
 
 export function Toolbar() {
   const { dashboard } = useDashboardStore();
   const { modules } = useModuleStore();
+  const { connected } = useHAStore();
   const [showPreview, setShowPreview] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
+  const [showHAConnect, setShowHAConnect] = useState(false);
 
   const handleExportYAML = () => {
     const yaml = generateDashboardYAML(dashboard);
@@ -93,6 +97,25 @@ export function Toolbar() {
 
         <div className="flex-1" />
 
+        {/* HA Connect button */}
+        <button
+          onClick={() => setShowHAConnect(true)}
+          className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs transition-colors cursor-pointer ${
+            connected
+              ? 'text-green-400 hover:bg-ha-card'
+              : 'text-ha-textSecondary hover:text-ha-text hover:bg-ha-card'
+          }`}
+          title={connected ? 'Connected to Home Assistant' : 'Connect to Home Assistant'}
+        >
+          <span
+            className={`w-2 h-2 rounded-full ${connected ? 'bg-green-400' : 'bg-ha-textSecondary/40'}`}
+          />
+          <Plug size={14} />
+          <span className="hidden sm:inline">{connected ? 'Connected' : 'Connect HA'}</span>
+        </button>
+
+        <div className="h-6 w-px bg-ha-border mx-1" />
+
         <ToolbarButton
           icon={<Eye size={15} />}
           label={showPreview ? 'Edit Mode' : 'Preview'}
@@ -105,6 +128,9 @@ export function Toolbar() {
         <ImportModal onClose={() => setShowImportModal(false)} />
       )}
       <TemplateLibrary isOpen={showTemplates} onClose={() => setShowTemplates(false)} />
+      {showHAConnect && (
+        <HAConnectModal onClose={() => setShowHAConnect(false)} />
+      )}
     </>
   );
 }

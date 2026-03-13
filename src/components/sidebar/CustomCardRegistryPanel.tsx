@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { ExternalLink, Plus, X } from 'lucide-react';
+import { ExternalLink, Plus, X, CheckCircle, Plug } from 'lucide-react';
 import { getAllCustomCards, saveUserCustomCard } from '../../data/customCardRegistry';
+import { useHAStore } from '../../store/haStore';
+import { inferCardTypeFromUrl } from '../../data/haConnection';
 
 export function CustomCardRegistryPanel() {
   const [search, setSearch] = useState('');
@@ -9,12 +11,27 @@ export function CustomCardRegistryPanel() {
   const [newName, setNewName] = useState('');
   const [newDesc, setNewDesc] = useState('');
   const [, forceUpdate] = useState(0);
+  const { connected, customCardUrls, hacsRepos } = useHAStore();
 
-  const cards = getAllCustomCards().filter((c) => {
+  const registryCards = getAllCustomCards().filter((c) => {
     if (!search.trim()) return true;
     const q = search.toLowerCase();
     return c.label.toLowerCase().includes(q) || c.type.toLowerCase().includes(q);
   });
+
+  // Build installed cards list from HA lovelace resources
+  const installedResources = connected
+    ? customCardUrls.map((url) => {
+        const inferred = inferCardTypeFromUrl(url);
+        const filename = url.split('/').pop() ?? url;
+        return {
+          url,
+          filename,
+          inferredType: inferred,
+          label: inferred ?? filename,
+        };
+      })
+    : [];
 
   const handleSave = () => {
     if (!newType.trim() || !newName.trim()) return;
@@ -51,6 +68,7 @@ export function CustomCardRegistryPanel() {
           <Plus size={14} />
         </button>
       </div>
+
       {showForm && (
         <div className="mb-3 p-3 bg-ha-bg border border-ha-border rounded-lg space-y-2">
           <div className="flex items-center justify-between">
@@ -86,8 +104,67 @@ export function CustomCardRegistryPanel() {
           </button>
         </div>
       )}
+
+      {/* Installed resources from live HA */}
+      {connected && installedResources.length > 0 && (
+        <div className="mb-3">
+          <div className="flex items-center gap-1.5 mb-1.5">
+            <Plug size={11} className="text-green-400" />
+            <span className="text-[10px] font-medium text-green-400">
+              Installed on your HA ({installedResources.length})
+            </span>
+          </div>
+          <div className="space-y-0.5">
+            {installedResources.map((res) => (
+              <div key={res.url} className="flex items-start gap-2 py-2 border-b border-ha-border/40 last:border-0">
+                <div className="flex-1 min-w-0">
+                  <div className="text-xs text-ha-text font-medium truncate">
+                    {res.inferredType ?? 'Unknown custom card'}
+                  </div>
+                  <code className="text-[10px] text-ha-textSecondary truncate block" title={res.url}>
+                    {res.filename}
+                  </code>
+                </div>
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <span className="flex items-center gap-1 text-[9px] bg-green-500/15 text-green-400 px-1.5 py-0.5 rounded-full">
+                    <CheckCircle size={9} />
+                    Installed
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* HACS repos */}
+      {connected && hacsRepos.length > 0 && (
+        <div className="mb-3">
+          <div className="text-[10px] font-medium text-ha-textSecondary mb-1.5">
+            HACS Frontend ({hacsRepos.length})
+          </div>
+          <div className="space-y-0.5">
+            {hacsRepos
+              .filter((r) => r.installed)
+              .map((repo) => (
+                <div key={repo.full_name} className="flex items-start gap-2 py-1.5 border-b border-ha-border/40 last:border-0">
+                  <div className="flex-1 min-w-0">
+                    <div className="text-xs text-ha-text truncate">{repo.name}</div>
+                    <div className="text-[10px] text-ha-textSecondary truncate">{repo.full_name}</div>
+                  </div>
+                  <span className="flex items-center gap-1 text-[9px] bg-green-500/15 text-green-400 px-1.5 py-0.5 rounded-full shrink-0">
+                    <CheckCircle size={9} />
+                    Installed
+                  </span>
+                </div>
+              ))}
+          </div>
+        </div>
+      )}
+
+      {/* Registry cards (built-in definitions) */}
       <div className="space-y-0.5">
-        {cards.map((card) => (
+        {registryCards.map((card) => (
           <div key={card.type} className="flex items-start gap-2 py-2 border-b border-ha-border/40 last:border-0">
             <div className="flex-1 min-w-0">
               <div className="text-xs text-ha-text font-medium truncate">{card.label}</div>
@@ -104,7 +181,7 @@ export function CustomCardRegistryPanel() {
             </div>
           </div>
         ))}
-        {cards.length === 0 && (
+        {registryCards.length === 0 && (
           <p className="text-xs text-ha-textSecondary text-center py-4">No custom cards found</p>
         )}
       </div>
