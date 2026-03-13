@@ -1,0 +1,136 @@
+{
+  "id": "tpl-mushroom-modern",
+  "title": "Mushroom Modern",
+  "views": [
+    {
+      "id": "view-dashboard",
+      "title": "Dashboard",
+      "path": "dashboard",
+      "icon": "mdi:view-dashboard",
+      "layout": "masonry",
+      "cards": [
+        {
+          "id": "card-mushroom-chips",
+          "type": "custom:mushroom-chips-card",
+          "config": {
+            "alignment": "center"
+          }
+        },
+        {
+          "id": "card-mushroom-light-living",
+          "type": "custom:mushroom-light-card",
+          "config": {
+            "entity": "light.living_room",
+            "name": "Living Room",
+            "show_brightness_control": true,
+            "show_color_temp_control": true,
+            "collapsible_controls": true
+          }
+        },
+        {
+          "id": "card-mushroom-light-kitchen",
+          "type": "custom:mushroom-light-card",
+          "config": {
+            "entity": "light.kitchen",
+            "name": "Kitchen",
+            "show_brightness_control": true,
+            "collapsible_controls": true
+          }
+        },
+        {
+          "id": "card-mushroom-climate",
+          "type": "custom:mushroom-climate-card",
+          "config": {
+            "entity": "climate.living_room",
+            "show_temperature_control": true,
+            "collapsible_controls": true
+          }
+        },
+        {
+          "id": "card-mushroom-entity-solar",
+          "type": "custom:mushroom-entity-card",
+          "config": {
+            "entity": "sensor.solar_power",
+            "name": "Solar",
+            "icon": "mdi:solar-power",
+            "icon_color": "amber",
+            "primary_info": "state",
+            "secondary_info": "name",
+            "layout": "horizontal"
+          }
+        },
+        {
+          "id": "card-mushroom-entity-battery",
+          "type": "custom:mushroom-entity-card",
+          "config": {
+            "entity": "sensor.battery_level",
+            "name": "Battery",
+            "icon": "mdi:battery",
+            "icon_color": "green",
+            "primary_info": "state",
+            "secondary_info": "name",
+            "layout": "horizontal"
+          }
+        }
+      ]
+    },
+    {
+      "id": "view-controls",
+      "title": "Controls",
+      "path": "controls",
+      "icon": "mdi:tune",
+      "layout": "masonry",
+      "cards": [
+        {
+          "id": "card-mushroom-light-bedroom",
+          "type": "custom:mushroom-light-card",
+          "config": {
+            "entity": "light.bedroom",
+            "name": "Bedroom",
+            "show_brightness_control": true,
+            "show_color_control": true,
+            "collapsible_controls": true
+          }
+        },
+        {
+          "id": "card-mushroom-light-office",
+          "type": "custom:mushroom-light-card",
+          "config": {
+            "entity": "light.office",
+            "name": "Office",
+            "show_brightness_control": true,
+            "collapsible_controls": true
+          }
+        },
+        {
+          "id": "card-mushroom-climate-bedroom",
+          "type": "custom:mushroom-climate-card",
+          "config": {
+            "entity": "climate.bedroom",
+            "show_temperature_control": true,
+            "collapsible_controls": true
+          }
+        },
+        {
+          "id": "card-mushroom-climate-office",
+          "type": "custom:mushroom-climate-card",
+          "config": {
+            "entity": "climate.office",
+            "show_temperature_control": true,
+            "collapsible_controls": true
+          }
+        },
+        {
+          "id": "card-mushroom-entity-tv",
+          "type": "custom:mushroom-entity-card",
+          "config": {
+            "entity": "media_player.living_room_tv",
+            "name": "Living Room TV",
+            "icon": "mdi:television",
+            "layout": "horizontal"
+          }
+        }
+      ]
+    }
+  ]
+}

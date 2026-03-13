@@ -1,0 +1,88 @@
+{
+  "id": "tpl-security-panel",
+  "title": "Security Panel",
+  "views": [
+    {
+      "id": "view-security-overview",
+      "title": "Security",
+      "path": "security",
+      "icon": "mdi:shield-home",
+      "layout": "masonry",
+      "cards": [
+        {
+          "id": "card-alarm",
+          "type": "alarm-panel",
+          "config": {
+            "entity": "alarm_control_panel.home",
+            "name": "Home Alarm"
+          }
+        },
+        {
+          "id": "card-doors-windows",
+          "type": "entities",
+          "config": {
+            "title": "Doors & Windows",
+            "entities": [
+              "binary_sensor.door_front",
+              "binary_sensor.window_kitchen",
+              "cover.garage_door"
+            ],
+            "state_color": true
+          }
+        },
+        {
+          "id": "card-motion",
+          "type": "glance",
+          "config": {
+            "title": "Motion Sensors",
+            "entities": [
+              "binary_sensor.motion_living",
+              "binary_sensor.smoke_kitchen"
+            ],
+            "show_state": true,
+            "state_color": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "view-access",
+      "title": "Access",
+      "path": "access",
+      "icon": "mdi:door",
+      "layout": "masonry",
+      "cards": [
+        {
+          "id": "card-person-frank",
+          "type": "entity",
+          "config": {
+            "entity": "person.frank",
+            "name": "Frank"
+          }
+        },
+        {
+          "id": "card-guest-mode",
+          "type": "button",
+          "config": {
+            "entity": "input_boolean.guest_mode",
+            "name": "Guest Mode",
+            "icon": "mdi:account-group",
+            "show_state": true,
+            "tap_action": { "action": "toggle" }
+          }
+        },
+        {
+          "id": "card-cover-garage",
+          "type": "button",
+          "config": {
+            "entity": "cover.garage_door",
+            "name": "Garage Door",
+            "icon": "mdi:garage",
+            "show_state": true,
+            "tap_action": { "action": "toggle" }
+          }
+        }
+      ]
+    }
+  ]
+}

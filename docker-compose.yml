@@ -1,0 +1,10 @@
+services:
+  ha-ui-builder:
+    image: ha-ui-builder:latest
+    build: .
+    container_name: ha-ui-builder
+    restart: unless-stopped
+    ports:
+      - "3080:80"
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"

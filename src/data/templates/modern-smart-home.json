@@ -1,0 +1,117 @@
+{
+  "id": "tpl-modern-smart-home",
+  "title": "Modern Smart Home",
+  "views": [
+    {
+      "id": "view-overview",
+      "title": "Overview",
+      "path": "overview",
+      "icon": "mdi:home",
+      "layout": "masonry",
+      "cards": [
+        {
+          "id": "card-weather-home",
+          "type": "weather-forecast",
+          "config": {
+            "entity": "weather.home",
+            "show_forecast": true
+          }
+        },
+        {
+          "id": "card-glance-overview",
+          "type": "glance",
+          "config": {
+            "title": "Quick Glance",
+            "entities": [
+              "light.living_room",
+              "light.kitchen",
+              "switch.tv",
+              "climate.living_room"
+            ],
+            "show_state": true
+          }
+        },
+        {
+          "id": "card-entity-temp",
+          "type": "entity",
+          "config": {
+            "entity": "sensor.temperature_living",
+            "name": "Living Room Temp"
+          }
+        },
+        {
+          "id": "card-button-living",
+          "type": "button",
+          "config": {
+            "entity": "light.living_room",
+            "name": "Living Room",
+            "icon": "mdi:lightbulb",
+            "show_state": true,
+            "tap_action": { "action": "toggle" }
+          }
+        }
+      ]
+    },
+    {
+      "id": "view-lights",
+      "title": "Lights",
+      "path": "lights",
+      "icon": "mdi:lightbulb",
+      "layout": "masonry",
+      "cards": [
+        {
+          "id": "card-all-lights",
+          "type": "entities",
+          "config": {
+            "title": "All Lights",
+            "show_header_toggle": true,
+            "entities": [
+              "light.living_room",
+              "light.bedroom",
+              "light.kitchen",
+              "light.office",
+              "light.bathroom",
+              "light.hallway"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "view-climate",
+      "title": "Climate",
+      "path": "climate",
+      "icon": "mdi:thermometer",
+      "layout": "masonry",
+      "cards": [
+        {
+          "id": "card-thermostat-living",
+          "type": "thermostat",
+          "config": {
+            "entity": "climate.living_room"
+          }
+        },
+        {
+          "id": "card-gauge-temp",
+          "type": "gauge",
+          "config": {
+            "entity": "sensor.temperature_living",
+            "name": "Temperature",
+            "min": 15,
+            "max": 30
+          }
+        },
+        {
+          "id": "card-gauge-humidity",
+          "type": "gauge",
+          "config": {
+            "entity": "sensor.humidity_living",
+            "name": "Humidity",
+            "min": 0,
+            "max": 100
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "id": "tpl-energy-dashboard",
+  "title": "Energy Dashboard",
+  "views": [
+    {
+      "id": "view-energy",
+      "title": "Energy",
+      "path": "energy",
+      "icon": "mdi:lightning-bolt",
+      "layout": "masonry",
+      "cards": [
+        {
+          "id": "card-gauge-solar",
+          "type": "gauge",
+          "config": {
+            "entity": "sensor.solar_power",
+            "name": "Solar",
+            "min": 0,
+            "max": 5000,
+            "severity": {
+              "green": 2000,
+              "yellow": 500,
+              "red": 0
+            }
+          }
+        },
+        {
+          "id": "card-gauge-grid",
+          "type": "gauge",
+          "config": {
+            "entity": "sensor.grid_power",
+            "name": "Grid",
+            "min": 0,
+            "max": 3000
+          }
+        },
+        {
+          "id": "card-gauge-battery",
+          "type": "gauge",
+          "config": {
+            "entity": "sensor.battery_level",
+            "name": "Battery",
+            "min": 0,
+            "max": 100
+          }
+        },
+        {
+          "id": "card-history-energy",
+          "type": "history-graph",
+          "config": {
+            "entities": ["sensor.energy_daily"],
+            "hours_to_show": 48,
+            "title": "Energy Usage (48h)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "view-solar",
+      "title": "Solar",
+      "path": "solar",
+      "icon": "mdi:solar-power",
+      "layout": "masonry",
+      "cards": [
+        {
+          "id": "card-history-solar",
+          "type": "history-graph",
+          "config": {
+            "entities": ["sensor.solar_power"],
+            "hours_to_show": 24,
+            "title": "Solar Output (24h)"
+          }
+        },
+        {
+          "id": "card-power-stats",
+          "type": "entities",
+          "config": {
+            "title": "Power Stats",
+            "entities": [
+              "sensor.solar_power",
+              "sensor.grid_power",
+              "sensor.battery_level",
+              "sensor.energy_daily"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "id": "tpl-media-jukebox",
+  "title": "Media Jukebox",
+  "views": [
+    {
+      "id": "view-now-playing",
+      "title": "Now Playing",
+      "path": "now-playing",
+      "icon": "mdi:play-circle",
+      "layout": "masonry",
+      "cards": [
+        {
+          "id": "card-media-tv",
+          "type": "media-control",
+          "config": {
+            "entity": "media_player.living_room_tv"
+          }
+        },
+        {
+          "id": "card-media-speaker",
+          "type": "media-control",
+          "config": {
+            "entity": "media_player.bedroom_speaker"
+          }
+        },
+        {
+          "id": "card-media-display",
+          "type": "media-control",
+          "config": {
+            "entity": "media_player.kitchen_display"
+          }
+        }
+      ]
+    },
+    {
+      "id": "view-all-players",
+      "title": "All Players",
+      "path": "players",
+      "icon": "mdi:speaker-multiple",
+      "layout": "masonry",
+      "cards": [
+        {
+          "id": "card-players-list",
+          "type": "entities",
+          "config": {
+            "title": "Media Players",
+            "entities": [
+              "media_player.living_room_tv",
+              "media_player.bedroom_speaker",
+              "media_player.kitchen_display"
+            ]
+          }
+        },
+        {
+          "id": "card-glance-media",
+          "type": "glance",
+          "config": {
+            "title": "Status",
+            "entities": [
+              "media_player.living_room_tv",
+              "media_player.bedroom_speaker",
+              "media_player.kitchen_display"
+            ],
+            "show_state": true
+          }
+        }
+      ]
+    }
+  ]
+}

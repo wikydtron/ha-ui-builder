@@ -1,0 +1,105 @@
+{
+  "id": "tpl-minimal-tablet",
+  "title": "Minimal Tablet",
+  "views": [
+    {
+      "id": "view-home",
+      "title": "Home",
+      "path": "home",
+      "icon": "mdi:tablet-dashboard",
+      "layout": "masonry",
+      "cards": [
+        {
+          "id": "card-weather-minimal",
+          "type": "weather-forecast",
+          "config": {
+            "entity": "weather.home",
+            "show_forecast": false
+          }
+        },
+        {
+          "id": "card-glance-quick",
+          "type": "glance",
+          "config": {
+            "entities": [
+              "light.living_room",
+              "light.kitchen",
+              "climate.living_room",
+              "switch.tv",
+              "cover.living_room_blinds"
+            ],
+            "show_name": false,
+            "columns": 5
+          }
+        },
+        {
+          "id": "card-temp-gauge",
+          "type": "gauge",
+          "config": {
+            "entity": "sensor.temperature_living",
+            "name": "Indoor",
+            "min": 10,
+            "max": 35
+          }
+        },
+        {
+          "id": "card-button-lights-off",
+          "type": "button",
+          "config": {
+            "name": "All Lights",
+            "icon": "mdi:lightbulb-group",
+            "show_state": false,
+            "tap_action": { "action": "none" }
+          }
+        }
+      ]
+    },
+    {
+      "id": "view-rooms",
+      "title": "Rooms",
+      "path": "rooms",
+      "icon": "mdi:floor-plan",
+      "layout": "masonry",
+      "cards": [
+        {
+          "id": "card-living-entities",
+          "type": "entities",
+          "config": {
+            "title": "Living Room",
+            "entities": [
+              "light.living_room",
+              "climate.living_room",
+              "cover.living_room_blinds",
+              "media_player.living_room_tv"
+            ]
+          }
+        },
+        {
+          "id": "card-bedroom-entities",
+          "type": "entities",
+          "config": {
+            "title": "Bedroom",
+            "entities": [
+              "light.bedroom",
+              "climate.bedroom",
+              "media_player.bedroom_speaker"
+            ]
+          }
+        },
+        {
+          "id": "card-kitchen-entities",
+          "type": "entities",
+          "config": {
+            "title": "Kitchen",
+            "entities": [
+              "light.kitchen",
+              "switch.coffee_maker",
+              "switch.dishwasher",
+              "media_player.kitchen_display"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

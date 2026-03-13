@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    @apply bg-ha-bg text-ha-text m-0 p-0;
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  #root {
+    @apply w-full h-screen overflow-hidden;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-ha-bg;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-ha-border rounded;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-ha-textSecondary;
+  }
+}
+
+@layer components {
+  .card-preview {
+    @apply bg-ha-card rounded-xl border border-ha-border p-4 shadow-lg;
+  }
+  .btn-primary {
+    @apply bg-ha-blue hover:bg-ha-darkBlue text-white px-4 py-2 rounded-lg transition-colors font-medium text-sm cursor-pointer;
+  }
+  .btn-secondary {
+    @apply bg-ha-card hover:bg-ha-border text-ha-text px-4 py-2 rounded-lg transition-colors font-medium text-sm border border-ha-border cursor-pointer;
+  }
+  .input-field {
+    @apply bg-ha-bg border border-ha-border rounded-lg px-3 py-2 text-ha-text text-sm focus:outline-none focus:border-ha-blue transition-colors w-full;
+  }
+  .label-text {
+    @apply text-ha-textSecondary text-xs font-medium uppercase tracking-wide mb-1 block;
+  }
+}
