@@ -12,6 +12,8 @@ import { HistoryGraphCard } from './HistoryGraphCard';
 import { AlarmPanelCard } from './AlarmPanelCard';
 import { StackCard } from './StackCard';
 import { GenericCard } from './GenericCard';
+import { RawCardFallback } from './RawCardFallback';
+import { getCustomCardDef } from '../../data/customCardRegistry';
 
 interface CardRendererProps {
   card: CardConfig;
@@ -36,8 +38,28 @@ const cardComponents: Record<string, React.FC<{ card: CardConfig }>> = {
 };
 
 export function CardRenderer({ card, isPreview }: CardRendererProps) {
-  const Component = cardComponents[card.type] || GenericCard;
+  const isKnownBuiltin = card.type in cardComponents;
+  const isKnownCustom = card.type.startsWith('custom:') && !!getCustomCardDef(card.type);
 
+  // Registered custom HACS cards → GenericCard preview
+  if (!isKnownBuiltin && isKnownCustom) {
+    return (
+      <div className={isPreview ? 'pointer-events-none' : ''}>
+        <GenericCard card={card} />
+      </div>
+    );
+  }
+
+  // Completely unknown type → RawCardFallback
+  if (!isKnownBuiltin && !isKnownCustom) {
+    return (
+      <div className={isPreview ? 'pointer-events-none' : ''}>
+        <RawCardFallback card={card} />
+      </div>
+    );
+  }
+
+  const Component = cardComponents[card.type];
   return (
     <div className={isPreview ? 'pointer-events-none' : ''}>
       <Component card={card} />
