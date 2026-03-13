@@ -1,0 +1,360 @@
+{
+  "id": "tpl-desktop-poweruser",
+  "title": "Desktop Power User",
+  "views": [
+    {
+      "id": "view-command-center",
+      "title": "Command Center",
+      "path": "command-center",
+      "icon": "mdi:monitor-dashboard",
+      "layout": "masonry",
+      "cards": [
+        {
+          "id": "card-pw-weather",
+          "type": "weather-forecast",
+          "config": {
+            "entity": "weather.home",
+            "show_forecast": true,
+            "forecast_type": "daily"
+          }
+        },
+        {
+          "id": "card-pw-markdown-status",
+          "type": "markdown",
+          "config": {
+            "content": "## 🏠 System Status  `{{ now().strftime('%A %H:%M') }}`\n\n| | |\n|---|---|\n| **Mode** | {{ states('input_select.house_mode') }} |\n| **Lights on** | {{ states \\| selectattr('domain','eq','light') \\| selectattr('state','eq','on') \\| list \\| count }} |\n| **Temp** | {{ states('sensor.living_room_temperature') }}°C / {{ states('sensor.outdoor_temperature') }}°C out |\n| **Solar** | {{ states('sensor.solar_power') }} W |\n| **Usage** | {{ states('sensor.power_consumption') }} W |"
+          }
+        },
+        {
+          "id": "card-pw-alarm",
+          "type": "alarm-panel",
+          "config": {
+            "entity": "alarm_control_panel.home",
+            "name": "Security System"
+          }
+        },
+        {
+          "id": "card-pw-people",
+          "type": "glance",
+          "config": {
+            "title": "Family Location",
+            "entities": [
+              "person.john",
+              "person.sarah",
+              "person.emma"
+            ],
+            "show_state": true,
+            "columns": 3
+          }
+        },
+        {
+          "id": "card-pw-automations",
+          "type": "entities",
+          "config": {
+            "title": "Automations",
+            "entities": [
+              "automation.morning_routine",
+              "automation.goodnight",
+              "automation.motion_lights_hallway",
+              "automation.away_mode",
+              "automation.garage_auto_close"
+            ],
+            "show_header_toggle": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "view-all-lights",
+      "title": "Lights",
+      "path": "lights",
+      "icon": "mdi:lightbulb-group",
+      "layout": "masonry",
+      "cards": [
+        {
+          "id": "card-pw-indoor-lights",
+          "type": "entities",
+          "config": {
+            "title": "Indoor",
+            "show_header_toggle": true,
+            "entities": [
+              "light.living_room_main",
+              "light.living_room_lamp",
+              "light.kitchen_overhead",
+              "light.kitchen_under_cabinet",
+              "light.master_bedroom",
+              "light.master_bedroom_nightstand_left",
+              "light.master_bedroom_nightstand_right",
+              "light.kids_bedroom",
+              "light.bathroom_vanity",
+              "light.office_desk"
+            ]
+          }
+        },
+        {
+          "id": "card-pw-outdoor-lights",
+          "type": "entities",
+          "config": {
+            "title": "Outdoor",
+            "show_header_toggle": true,
+            "entities": [
+              "light.front_porch",
+              "light.backyard_patio",
+              "light.garage"
+            ]
+          }
+        },
+        {
+          "id": "card-pw-switches",
+          "type": "entities",
+          "config": {
+            "title": "Switches & Plugs",
+            "entities": [
+              "switch.living_room_outlet",
+              "switch.coffee_maker",
+              "switch.garage_heater",
+              "switch.office_monitor_power",
+              "switch.christmas_tree"
+            ],
+            "state_color": true
+          }
+        },
+        {
+          "id": "card-pw-scenes",
+          "type": "entities",
+          "config": {
+            "title": "Scene & Mode",
+            "entities": [
+              "input_select.house_mode",
+              "input_select.light_scene",
+              "input_number.default_brightness"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "view-climate-detail",
+      "title": "Climate",
+      "path": "climate",
+      "icon": "mdi:thermometer",
+      "layout": "masonry",
+      "cards": [
+        {
+          "id": "card-pw-thermo-living",
+          "type": "thermostat",
+          "config": {
+            "entity": "climate.living_room"
+          }
+        },
+        {
+          "id": "card-pw-thermo-upstairs",
+          "type": "thermostat",
+          "config": {
+            "entity": "climate.upstairs"
+          }
+        },
+        {
+          "id": "card-pw-thermo-office",
+          "type": "thermostat",
+          "config": {
+            "entity": "climate.office"
+          }
+        },
+        {
+          "id": "card-pw-gauge-living",
+          "type": "gauge",
+          "config": {
+            "entity": "sensor.living_room_temperature",
+            "name": "Living Room",
+            "min": 15,
+            "max": 35,
+            "unit": "°C"
+          }
+        },
+        {
+          "id": "card-pw-gauge-outdoor",
+          "type": "gauge",
+          "config": {
+            "entity": "sensor.outdoor_temperature",
+            "name": "Outdoor",
+            "min": -20,
+            "max": 40,
+            "unit": "°C"
+          }
+        },
+        {
+          "id": "card-pw-humidity",
+          "type": "gauge",
+          "config": {
+            "entity": "sensor.living_room_humidity",
+            "name": "Humidity",
+            "min": 0,
+            "max": 100,
+            "unit": "%"
+          }
+        },
+        {
+          "id": "card-pw-fans",
+          "type": "entities",
+          "config": {
+            "title": "Fans",
+            "entities": [
+              "fan.living_room_ceiling",
+              "fan.master_bedroom_ceiling",
+              "fan.office_desk"
+            ]
+          }
+        },
+        {
+          "id": "card-pw-temp-history",
+          "type": "history-graph",
+          "config": {
+            "title": "Temperature History — 48h",
+            "entities": [
+              { "entity": "sensor.living_room_temperature", "name": "Living Room" },
+              { "entity": "sensor.outdoor_temperature", "name": "Outdoor" },
+              { "entity": "sensor.master_bedroom_temperature", "name": "Bedroom" }
+            ],
+            "hours_to_show": 48
+          }
+        }
+      ]
+    },
+    {
+      "id": "view-energy-pw",
+      "title": "Energy",
+      "path": "energy",
+      "icon": "mdi:lightning-bolt",
+      "layout": "masonry",
+      "cards": [
+        {
+          "id": "card-pw-solar-gauge",
+          "type": "gauge",
+          "config": {
+            "entity": "sensor.solar_power",
+            "name": "Solar",
+            "min": 0,
+            "max": 5000,
+            "unit": "W",
+            "severity": { "green": 2000, "yellow": 500, "red": 0 }
+          }
+        },
+        {
+          "id": "card-pw-usage-gauge",
+          "type": "gauge",
+          "config": {
+            "entity": "sensor.power_consumption",
+            "name": "Consumption",
+            "min": 0,
+            "max": 5000,
+            "unit": "W",
+            "severity": { "green": 0, "yellow": 2000, "red": 3500 }
+          }
+        },
+        {
+          "id": "card-pw-energy-entities",
+          "type": "entities",
+          "config": {
+            "title": "Energy Meters",
+            "entities": [
+              "sensor.energy_daily",
+              "sensor.solar_power",
+              "sensor.power_consumption",
+              "sensor.washing_machine_power"
+            ]
+          }
+        },
+        {
+          "id": "card-pw-power-history",
+          "type": "history-graph",
+          "config": {
+            "title": "Power — 7 Days",
+            "entities": [
+              { "entity": "sensor.solar_power", "name": "Solar" },
+              { "entity": "sensor.power_consumption", "name": "Usage" }
+            ],
+            "hours_to_show": 168,
+            "refresh_interval": 300
+          }
+        }
+      ]
+    },
+    {
+      "id": "view-system",
+      "title": "System",
+      "path": "system",
+      "icon": "mdi:cog",
+      "layout": "masonry",
+      "cards": [
+        {
+          "id": "card-pw-updates",
+          "type": "entities",
+          "config": {
+            "title": "Updates",
+            "entities": [
+              "update.home_assistant_core",
+              "update.hacs",
+              "update.mosquitto_broker"
+            ]
+          }
+        },
+        {
+          "id": "card-pw-vacuum",
+          "type": "entity",
+          "config": {
+            "entity": "vacuum.roborock",
+            "name": "Roborock",
+            "icon": "mdi:robot-vacuum"
+          }
+        },
+        {
+          "id": "card-pw-booleans",
+          "type": "entities",
+          "config": {
+            "title": "Modes & Flags",
+            "entities": [
+              "input_boolean.guest_mode",
+              "input_boolean.vacation_mode",
+              "input_boolean.sleep_mode",
+              "input_boolean.do_not_disturb"
+            ],
+            "state_color": true
+          }
+        },
+        {
+          "id": "card-pw-trackers",
+          "type": "entities",
+          "config": {
+            "title": "Device Trackers",
+            "entities": [
+              "device_tracker.john_phone",
+              "device_tracker.sarah_phone",
+              "device_tracker.emma_phone"
+            ]
+          }
+        },
+        {
+          "id": "card-pw-batteries",
+          "type": "entities",
+          "config": {
+            "title": "Sensor Batteries",
+            "entities": [
+              "sensor.front_door_battery",
+              "sensor.garage_door_battery"
+            ]
+          }
+        },
+        {
+          "id": "card-pw-air",
+          "type": "entity",
+          "config": {
+            "entity": "sensor.air_quality_pm25",
+            "name": "Air Quality PM2.5",
+            "icon": "mdi:air-filter"
+          }
+        }
+      ]
+    }
+  ]
+}

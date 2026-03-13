@@ -13,55 +13,141 @@
           "id": "card-media-tv",
           "type": "media-control",
           "config": {
-            "entity": "media_player.living_room_tv"
+            "entity": "media_player.living_room_tv",
+            "name": "Living Room TV"
           }
         },
         {
-          "id": "card-media-speaker",
+          "id": "card-media-bedroom-tv",
           "type": "media-control",
           "config": {
-            "entity": "media_player.bedroom_speaker"
+            "entity": "media_player.bedroom_tv",
+            "name": "Bedroom TV"
           }
         },
         {
-          "id": "card-media-display",
+          "id": "card-sonos",
           "type": "media-control",
           "config": {
-            "entity": "media_player.kitchen_display"
+            "entity": "media_player.sonos_whole_home",
+            "name": "Whole Home Audio"
           }
         }
       ]
     },
     {
-      "id": "view-all-players",
-      "title": "All Players",
-      "path": "players",
+      "id": "view-speakers",
+      "title": "Speakers",
+      "path": "speakers",
       "icon": "mdi:speaker-multiple",
       "layout": "masonry",
       "cards": [
         {
-          "id": "card-players-list",
+          "id": "card-media-kitchen",
+          "type": "media-control",
+          "config": {
+            "entity": "media_player.kitchen_speaker",
+            "name": "Kitchen Speaker"
+          }
+        },
+        {
+          "id": "card-media-office",
+          "type": "media-control",
+          "config": {
+            "entity": "media_player.office_speaker",
+            "name": "Office Speaker"
+          }
+        },
+        {
+          "id": "card-all-players",
           "type": "entities",
           "config": {
-            "title": "Media Players",
+            "title": "All Media Players",
             "entities": [
               "media_player.living_room_tv",
-              "media_player.bedroom_speaker",
-              "media_player.kitchen_display"
+              "media_player.bedroom_tv",
+              "media_player.kitchen_speaker",
+              "media_player.office_speaker",
+              "media_player.sonos_whole_home"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "view-scene-shortcuts",
+      "title": "Scenes",
+      "path": "media-scenes",
+      "icon": "mdi:filmstrip",
+      "layout": "masonry",
+      "cards": [
+        {
+          "id": "card-movie-mode",
+          "type": "button",
+          "config": {
+            "entity": "script.movie_mode",
+            "name": "🎬 Movie Mode",
+            "icon": "mdi:movie",
+            "show_state": false,
+            "tap_action": { "action": "call-service", "service": "script.turn_on", "target": { "entity_id": "script.movie_mode" } }
+          }
+        },
+        {
+          "id": "card-party-mode",
+          "type": "button",
+          "config": {
+            "entity": "script.party_mode",
+            "name": "🎉 Party Mode",
+            "icon": "mdi:party-popper",
+            "show_state": false,
+            "tap_action": { "action": "call-service", "service": "script.turn_on", "target": { "entity_id": "script.party_mode" } }
+          }
+        },
+        {
+          "id": "card-markdown-tips",
+          "type": "markdown",
+          "config": {
+            "content": "## 🎵 Media Tips\n\n- **Movie Mode** dims lights & sets TV to optimal settings\n- **Party Mode** sets all speakers to the same source\n- Use the individual player controls above for fine-grained control"
+          }
+        }
+      ]
+    },
+    {
+      "id": "view-tv-controls",
+      "title": "TV",
+      "path": "tv",
+      "icon": "mdi:television",
+      "layout": "masonry",
+      "cards": [
+        {
+          "id": "card-tv-entity",
+          "type": "entity",
+          "config": {
+            "entity": "media_player.living_room_tv",
+            "name": "Living Room TV",
+            "icon": "mdi:television"
+          }
+        },
+        {
+          "id": "card-tv-lights",
+          "type": "entities",
+          "config": {
+            "title": "TV Room Ambiance",
+            "entities": [
+              "light.living_room_main",
+              "light.living_room_lamp"
             ]
           }
         },
         {
-          "id": "card-glance-media",
-          "type": "glance",
+          "id": "card-tv-blinds",
+          "type": "button",
           "config": {
-            "title": "Status",
-            "entities": [
-              "media_player.living_room_tv",
-              "media_player.bedroom_speaker",
-              "media_player.kitchen_display"
-            ],
-            "show_state": true
+            "entity": "cover.living_room_blinds",
+            "name": "Blinds",
+            "icon": "mdi:blinds",
+            "show_state": true,
+            "tap_action": { "action": "toggle" }
           }
         }
       ]

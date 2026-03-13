@@ -14,40 +14,60 @@
           "type": "weather-forecast",
           "config": {
             "entity": "weather.home",
-            "show_forecast": true
+            "show_forecast": true,
+            "forecast_type": "daily"
           }
         },
         {
           "id": "card-glance-overview",
           "type": "glance",
           "config": {
-            "title": "Quick Glance",
+            "title": "Quick Status",
             "entities": [
-              "light.living_room",
-              "light.kitchen",
-              "switch.tv",
-              "climate.living_room"
+              "light.living_room_main",
+              "climate.living_room",
+              "lock.front_door",
+              "binary_sensor.front_door",
+              "cover.garage_door",
+              "alarm_control_panel.home"
             ],
-            "show_state": true
-          }
-        },
-        {
-          "id": "card-entity-temp",
-          "type": "entity",
-          "config": {
-            "entity": "sensor.temperature_living",
-            "name": "Living Room Temp"
-          }
-        },
-        {
-          "id": "card-button-living",
-          "type": "button",
-          "config": {
-            "entity": "light.living_room",
-            "name": "Living Room",
-            "icon": "mdi:lightbulb",
             "show_state": true,
-            "tap_action": { "action": "toggle" }
+            "columns": 3
+          }
+        },
+        {
+          "id": "card-people",
+          "type": "glance",
+          "config": {
+            "title": "Who's Home",
+            "entities": [
+              "person.john",
+              "person.sarah",
+              "person.emma"
+            ],
+            "show_state": true,
+            "columns": 3
+          }
+        },
+        {
+          "id": "card-markdown-welcome",
+          "type": "markdown",
+          "config": {
+            "content": "## Good {{ now().strftime('%A') }}!\n\n🏠 **House Mode:** {{ states('input_select.house_mode') }}\n🌡️ **Indoor:** {{ states('sensor.living_room_temperature') }}°C\n💡 **Lights on:** {{ states | selectattr('domain', 'eq', 'light') | selectattr('state', 'eq', 'on') | list | count }}"
+          }
+        },
+        {
+          "id": "card-automations",
+          "type": "entities",
+          "config": {
+            "title": "Automations",
+            "entities": [
+              "automation.morning_routine",
+              "automation.goodnight",
+              "automation.motion_lights_hallway",
+              "automation.away_mode"
+            ],
+            "show_header_toggle": false
           }
         }
       ]
@@ -66,13 +86,41 @@
             "title": "All Lights",
             "show_header_toggle": true,
             "entities": [
-              "light.living_room",
-              "light.bedroom",
-              "light.kitchen",
-              "light.office",
-              "light.bathroom",
-              "light.hallway"
+              "light.living_room_main",
+              "light.living_room_lamp",
+              "light.kitchen_overhead",
+              "light.kitchen_under_cabinet",
+              "light.master_bedroom",
+              "light.master_bedroom_nightstand_left",
+              "light.master_bedroom_nightstand_right",
+              "light.kids_bedroom",
+              "light.bathroom_vanity",
+              "light.office_desk"
             ]
+          }
+        },
+        {
+          "id": "card-outdoor-lights",
+          "type": "entities",
+          "config": {
+            "title": "Outdoor Lights",
+            "show_header_toggle": true,
+            "entities": [
+              "light.front_porch",
+              "light.backyard_patio",
+              "light.garage"
+            ]
+          }
+        },
+        {
+          "id": "card-scene-buttons",
+          "type": "glance",
+          "config": {
+            "title": "Quick Scenes",
+            "entities": [
+              "input_select.light_scene"
+            ],
+            "show_state": true
           }
         }
       ]
@@ -88,27 +136,191 @@
           "id": "card-thermostat-living",
           "type": "thermostat",
           "config": {
-            "entity": "climate.living_room"
+            "entity": "climate.living_room",
+            "name": "Living Room"
           }
         },
         {
-          "id": "card-gauge-temp",
+          "id": "card-thermostat-upstairs",
+          "type": "thermostat",
+          "config": {
+            "entity": "climate.upstairs",
+            "name": "Upstairs"
+          }
+        },
+        {
+          "id": "card-thermostat-office",
+          "type": "thermostat",
+          "config": {
+            "entity": "climate.office",
+            "name": "Office"
+          }
+        },
+        {
+          "id": "card-gauge-living-temp",
           "type": "gauge",
           "config": {
-            "entity": "sensor.temperature_living",
-            "name": "Temperature",
+            "entity": "sensor.living_room_temperature",
+            "name": "Living Room",
             "min": 15,
-            "max": 30
+            "max": 35,
+            "unit": "°C",
+            "severity": {
+              "green": 18,
+              "yellow": 25,
+              "red": 30
+            }
           }
         },
         {
           "id": "card-gauge-humidity",
           "type": "gauge",
           "config": {
-            "entity": "sensor.humidity_living",
+            "entity": "sensor.living_room_humidity",
             "name": "Humidity",
             "min": 0,
-            "max": 100
+            "max": 100,
+            "unit": "%",
+            "severity": {
+              "green": 40,
+              "yellow": 60,
+              "red": 75
+            }
+          }
+        },
+        {
+          "id": "card-temp-sensors",
+          "type": "entities",
+          "config": {
+            "title": "Temperature Sensors",
+            "entities": [
+              "sensor.living_room_temperature",
+              "sensor.outdoor_temperature",
+              "sensor.kitchen_temperature",
+              "sensor.master_bedroom_temperature"
+            ]
+          }
+        },
+        {
+          "id": "card-fans",
+          "type": "entities",
+          "config": {
+            "title": "Fans",
+            "entities": [
+              "fan.living_room_ceiling",
+              "fan.master_bedroom_ceiling",
+              "fan.office_desk"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "view-security",
+      "title": "Security",
+      "path": "security",
+      "icon": "mdi:shield-home",
+      "layout": "masonry",
+      "cards": [
+        {
+          "id": "card-alarm",
+          "type": "alarm-panel",
+          "config": {
+            "entity": "alarm_control_panel.home",
+            "name": "Home Alarm"
+          }
+        },
+        {
+          "id": "card-locks",
+          "type": "entities",
+          "config": {
+            "title": "Locks",
+            "entities": [
+              "lock.front_door",
+              "lock.back_door",
+              "lock.garage_entry"
+            ],
+            "state_color": true
+          }
+        },
+        {
+          "id": "card-doors-windows",
+          "type": "entities",
+          "config": {
+            "title": "Doors & Covers",
+            "entities": [
+              "binary_sensor.front_door",
+              "binary_sensor.back_door",
+              "binary_sensor.garage_door",
+              "cover.garage_door",
+              "cover.living_room_blinds",
+              "cover.master_bedroom_blinds"
+            ],
+            "state_color": true
+          }
+        },
+        {
+          "id": "card-motion-sensors",
+          "type": "glance",
+          "config": {
+            "title": "Motion & Alerts",
+            "entities": [
+              "binary_sensor.living_room_motion",
+              "binary_sensor.kitchen_motion",
+              "binary_sensor.hallway_motion",
+              "binary_sensor.smoke_detector_kitchen",
+              "binary_sensor.water_leak_basement"
+            ],
+            "show_state": true,
+            "state_color": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "view-media",
+      "title": "Media",
+      "path": "media",
+      "icon": "mdi:play-circle",
+      "layout": "masonry",
+      "cards": [
+        {
+          "id": "card-media-tv",
+          "type": "media-control",
+          "config": {
+            "entity": "media_player.living_room_tv",
+            "name": "Living Room TV"
+          }
+        },
+        {
+          "id": "card-media-bedroom",
+          "type": "media-control",
+          "config": {
+            "entity": "media_player.bedroom_tv",
+            "name": "Bedroom TV"
+          }
+        },
+        {
+          "id": "card-media-speakers",
+          "type": "entities",
+          "config": {
+            "title": "Speakers",
+            "entities": [
+              "media_player.kitchen_speaker",
+              "media_player.office_speaker",
+              "media_player.sonos_whole_home"
+            ]
+          }
+        },
+        {
+          "id": "card-script-movie",
+          "type": "button",
+          "config": {
+            "entity": "script.movie_mode",
+            "name": "Movie Mode",
+            "icon": "mdi:movie",
+            "show_state": false,
+            "tap_action": { "action": "call-service", "service": "script.turn_on", "target": { "entity_id": "script.movie_mode" } }
           }
         }
       ]

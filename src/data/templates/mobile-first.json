@@ -1,0 +1,227 @@
+{
+  "id": "tpl-mobile-first",
+  "title": "Mobile First",
+  "views": [
+    {
+      "id": "view-mobile-home",
+      "title": "Home",
+      "path": "home",
+      "icon": "mdi:home",
+      "layout": "masonry",
+      "cards": [
+        {
+          "id": "card-mobile-weather",
+          "type": "weather-forecast",
+          "config": {
+            "entity": "weather.home",
+            "show_forecast": true,
+            "forecast_type": "daily"
+          }
+        },
+        {
+          "id": "card-mobile-status",
+          "type": "glance",
+          "config": {
+            "title": "Quick Status",
+            "entities": [
+              "alarm_control_panel.home",
+              "lock.front_door",
+              "cover.garage_door",
+              "input_boolean.guest_mode"
+            ],
+            "show_state": true,
+            "columns": 2
+          }
+        },
+        {
+          "id": "card-mobile-lights-all",
+          "type": "button",
+          "config": {
+            "entity": "script.all_lights_off",
+            "name": "All Lights Off",
+            "icon": "mdi:lightbulb-group-off",
+            "show_state": false,
+            "tap_action": { "action": "call-service", "service": "script.turn_on", "target": { "entity_id": "script.all_lights_off" } }
+          }
+        },
+        {
+          "id": "card-mobile-sleep",
+          "type": "button",
+          "config": {
+            "entity": "input_boolean.sleep_mode",
+            "name": "Sleep Mode",
+            "icon": "mdi:sleep",
+            "show_state": true,
+            "tap_action": { "action": "toggle" }
+          }
+        }
+      ]
+    },
+    {
+      "id": "view-mobile-lights",
+      "title": "Lights",
+      "path": "lights",
+      "icon": "mdi:lightbulb",
+      "layout": "masonry",
+      "cards": [
+        {
+          "id": "card-mobile-living-light",
+          "type": "button",
+          "config": {
+            "entity": "light.living_room_main",
+            "name": "Living Room",
+            "icon": "mdi:sofa",
+            "show_state": true,
+            "tap_action": { "action": "toggle" }
+          }
+        },
+        {
+          "id": "card-mobile-kitchen-light",
+          "type": "button",
+          "config": {
+            "entity": "light.kitchen_overhead",
+            "name": "Kitchen",
+            "icon": "mdi:countertop",
+            "show_state": true,
+            "tap_action": { "action": "toggle" }
+          }
+        },
+        {
+          "id": "card-mobile-bedroom-light",
+          "type": "button",
+          "config": {
+            "entity": "light.master_bedroom",
+            "name": "Bedroom",
+            "icon": "mdi:bed",
+            "show_state": true,
+            "tap_action": { "action": "toggle" }
+          }
+        },
+        {
+          "id": "card-mobile-office-light",
+          "type": "button",
+          "config": {
+            "entity": "light.office_desk",
+            "name": "Office",
+            "icon": "mdi:desk-lamp",
+            "show_state": true,
+            "tap_action": { "action": "toggle" }
+          }
+        },
+        {
+          "id": "card-mobile-porch-light",
+          "type": "button",
+          "config": {
+            "entity": "light.front_porch",
+            "name": "Front Porch",
+            "icon": "mdi:outdoor-lamp",
+            "show_state": true,
+            "tap_action": { "action": "toggle" }
+          }
+        },
+        {
+          "id": "card-mobile-patio-light",
+          "type": "button",
+          "config": {
+            "entity": "light.backyard_patio",
+            "name": "Patio",
+            "icon": "mdi:string-lights",
+            "show_state": true,
+            "tap_action": { "action": "toggle" }
+          }
+        }
+      ]
+    },
+    {
+      "id": "view-mobile-climate",
+      "title": "Climate",
+      "path": "climate",
+      "icon": "mdi:thermometer",
+      "layout": "masonry",
+      "cards": [
+        {
+          "id": "card-mobile-thermostat",
+          "type": "thermostat",
+          "config": {
+            "entity": "climate.living_room",
+            "name": "Main"
+          }
+        },
+        {
+          "id": "card-mobile-temp-outdoor",
+          "type": "entity",
+          "config": {
+            "entity": "sensor.outdoor_temperature",
+            "name": "Outside",
+            "icon": "mdi:thermometer"
+          }
+        },
+        {
+          "id": "card-mobile-temps",
+          "type": "glance",
+          "config": {
+            "title": "Temperatures",
+            "entities": [
+              "sensor.living_room_temperature",
+              "sensor.kitchen_temperature",
+              "sensor.master_bedroom_temperature"
+            ],
+            "show_state": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "view-mobile-security",
+      "title": "Security",
+      "path": "security",
+      "icon": "mdi:shield",
+      "layout": "masonry",
+      "cards": [
+        {
+          "id": "card-mobile-alarm",
+          "type": "alarm-panel",
+          "config": {
+            "entity": "alarm_control_panel.home",
+            "name": "Alarm"
+          }
+        },
+        {
+          "id": "card-mobile-front-door",
+          "type": "button",
+          "config": {
+            "entity": "lock.front_door",
+            "name": "Front Door",
+            "icon": "mdi:door-closed-lock",
+            "show_state": true,
+            "tap_action": { "action": "toggle" }
+          }
+        },
+        {
+          "id": "card-mobile-garage",
+          "type": "button",
+          "config": {
+            "entity": "cover.garage_door",
+            "name": "Garage",
+            "icon": "mdi:garage",
+            "show_state": true,
+            "tap_action": { "action": "toggle" }
+          }
+        },
+        {
+          "id": "card-mobile-people",
+          "type": "glance",
+          "config": {
+            "title": "Family",
+            "entities": [
+              "person.john",
+              "person.sarah",
+              "person.emma"
+            ],
+            "show_state": true
+          }
+        }
+      ]
+    }
+  ]
+}

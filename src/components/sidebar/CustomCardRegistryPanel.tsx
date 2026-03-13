@@ -13,20 +13,19 @@ export function CustomCardRegistryPanel() {
   const cards = getAllCustomCards().filter((c) => {
     if (!search.trim()) return true;
     const q = search.toLowerCase();
-    return c.name.toLowerCase().includes(q) || c.type.toLowerCase().includes(q);
+    return c.label.toLowerCase().includes(q) || c.type.toLowerCase().includes(q);
   });
 
   const handleSave = () => {
     if (!newType.trim() || !newName.trim()) return;
     saveUserCustomCard({
       type: newType.trim(),
-      name: newName.trim(),
+      label: newName.trim(),
       description: newDesc.trim(),
+      icon: 'Custom',
+      fields: [],
       supportLevel: 'preview-only',
-      category: 'custom',
-      schema: [],
-      defaultConfig: {},
-      renderHint: 'generic',
+      hacsRepo: '',
     });
     setNewType('');
     setNewName('');
@@ -37,7 +36,6 @@ export function CustomCardRegistryPanel() {
 
   return (
     <div className="p-2">
-      {/* Search + Add */}
       <div className="flex gap-1 mb-2">
         <input
           className="flex-1 bg-ha-bg border border-ha-border rounded px-2 py-1.5 text-xs text-ha-text outline-none focus:border-ha-blue/50"
@@ -53,8 +51,6 @@ export function CustomCardRegistryPanel() {
           <Plus size={14} />
         </button>
       </div>
-
-      {/* Add form */}
       {showForm && (
         <div className="mb-3 p-3 bg-ha-bg border border-ha-border rounded-lg space-y-2">
           <div className="flex items-center justify-between">
@@ -90,25 +86,18 @@ export function CustomCardRegistryPanel() {
           </button>
         </div>
       )}
-
-      {/* Card list */}
       <div className="space-y-0.5">
         {cards.map((card) => (
           <div key={card.type} className="flex items-start gap-2 py-2 border-b border-ha-border/40 last:border-0">
             <div className="flex-1 min-w-0">
-              <div className="text-xs text-ha-text font-medium truncate">{card.name}</div>
+              <div className="text-xs text-ha-text font-medium truncate">{card.label}</div>
               <code className="text-[10px] text-ha-textSecondary">{card.type}</code>
             </div>
             <div className="flex items-center gap-1.5 shrink-0">
               <span className="text-[9px] bg-orange-500/20 text-orange-400 px-1.5 py-0.5 rounded-full">Preview</span>
-              {card.docsUrl && (
-                <a
-                  href={card.docsUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-ha-textSecondary hover:text-ha-blue transition-colors"
-                  title="Docs"
-                >
+              {card.hacsRepo && (
+                <a href={card.hacsRepo} target="_blank" rel="noopener noreferrer"
+                  className="text-ha-textSecondary hover:text-ha-blue transition-colors" title="Docs">
                   <ExternalLink size={11} />
                 </a>
               )}

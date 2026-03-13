@@ -67,14 +67,6 @@ function cleanObject(obj: Record<string, unknown>): Record<string, unknown> {
   return result;
 }
 
-/**
- * Convert a boolean field to its HA YAML value, skipping defaults.
- */
-function isDefault(value: unknown, defaultValue: unknown): boolean {
-  if (defaultValue === undefined) return false;
-  return JSON.stringify(value) === JSON.stringify(defaultValue);
-}
-
 // ============================================================
 // Card → Lovelace
 // ============================================================
@@ -89,6 +81,7 @@ function cardToLovelace(card: CardConfig): Record<string, unknown> {
   if (config) {
     for (const [key, value] of Object.entries(config)) {
       if (INTERNAL_FIELDS.has(key)) continue;
+      if (key === 'rawConfig') continue; // handled separately below
       if (value === undefined || value === null) continue;
       if (typeof value === 'string' && value === '') continue;
       obj[key] = value;
@@ -103,15 +96,15 @@ function cardToLovelace(card: CardConfig): Record<string, unknown> {
         obj[key] = value;
       }
     }
-    delete obj['rawConfig'];
   }
 
-  // Container cards: output children as `cards` array
-  if (CONTAINER_CARD_TYPES.has(type) && children && children.length > 0) {
-    obj.cards = children.map(cardToLovelace);
-    // Don't also emit cards from config
+  // Container cards: children[] → cards: in YAML output
+  // Delete any config.cards that was spread above, then set from children
+  if (CONTAINER_CARD_TYPES.has(type)) {
     delete obj['cards'];
-    obj.cards = children.map(cardToLovelace);
+    if (children && children.length > 0) {
+      obj.cards = children.map(cardToLovelace);
+    }
   }
 
   return cleanObject(obj);
@@ -126,7 +119,9 @@ function viewToLovelace(view: ViewConfig): Record<string, unknown> {
 
   if (view.title) obj.title = view.title;
   if (view.icon) obj.icon = view.icon;
-  if (view.path) obj.path = view.path;
+
+  // path is required for HA to navigate — default to slugified title
+  obj.path = view.path || view.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
   // Layout mapping
   if (view.layout && view.layout !== 'masonry') {

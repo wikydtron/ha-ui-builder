@@ -9,6 +9,8 @@ import mediaJukebox from '../../data/templates/media-jukebox.json';
 import securityPanel from '../../data/templates/security-panel.json';
 import minimalTablet from '../../data/templates/minimal-tablet.json';
 import mushroomModern from '../../data/templates/mushroom-modern.json';
+import mobileFirst from '../../data/templates/mobile-first.json';
+import desktopPoweruser from '../../data/templates/desktop-poweruser.json';
 
 interface TemplateEntry {
   data: DashboardConfig;
@@ -17,12 +19,14 @@ interface TemplateEntry {
 }
 
 const templates: TemplateEntry[] = [
-  { data: modernSmartHome as unknown as DashboardConfig, description: 'Clean overview with lights, climate, and weather across 3 views.', tags: ['overview', 'lights', 'climate'] },
-  { data: energyDashboard as unknown as DashboardConfig, description: 'Solar, grid, and battery monitoring with history graphs.', tags: ['energy', 'solar', 'sensors'] },
-  { data: mediaJukebox as unknown as DashboardConfig, description: 'Media player controls for all rooms.', tags: ['media', 'music', 'TV'] },
-  { data: securityPanel as unknown as DashboardConfig, description: 'Security cameras, alarm panel, and door/motion sensors.', tags: ['security', 'alarm', 'cameras'] },
-  { data: minimalTablet as unknown as DashboardConfig, description: 'Clean minimal layout optimised for tablets and wall panels.', tags: ['tablet', 'minimal', 'wall'] },
-  { data: mushroomModern as unknown as DashboardConfig, description: 'Modern look using Mushroom custom cards from HACS.', tags: ['mushroom', 'HACS', 'modern'] },
+  { data: modernSmartHome as unknown as DashboardConfig, description: 'Complete smart home with overview, lights, climate, security & media across 5 views.', tags: ['overview', 'lights', 'climate', 'security'] },
+  { data: energyDashboard as unknown as DashboardConfig, description: 'Solar, consumption & appliance monitoring with history graphs across 4 views.', tags: ['energy', 'solar', 'sensors'] },
+  { data: mediaJukebox as unknown as DashboardConfig, description: 'Media player controls for all rooms with scene shortcuts across 4 views.', tags: ['media', 'music', 'TV'] },
+  { data: securityPanel as unknown as DashboardConfig, description: 'Alarm panel, locks, motion sensors and door access history across 3 views.', tags: ['security', 'alarm', 'locks'] },
+  { data: minimalTablet as unknown as DashboardConfig, description: 'Clean minimal layout for tablets and wall panels with room controls across 4 views.', tags: ['tablet', 'minimal', 'wall'] },
+  { data: mushroomModern as unknown as DashboardConfig, description: 'Modern Mushroom card look with lights, climate and device controls across 4 views.', tags: ['mushroom', 'HACS', 'modern'] },
+  { data: mobileFirst as unknown as DashboardConfig, description: 'Large tap targets optimised for phone screens — lights, climate, security across 4 views.', tags: ['mobile', 'phone', 'minimal'] },
+  { data: desktopPoweruser as unknown as DashboardConfig, description: 'Dense information layout for desktop browsers — command center, all devices, energy & system across 5 views.', tags: ['desktop', 'power', 'dense'] },
 ];
 
 function countCards(dashboard: DashboardConfig): number {
@@ -59,7 +63,7 @@ export function TemplateLibrary({ isOpen, onClose }: Props) {
             <div className="flex items-center gap-2">
               <LayoutTemplate size={18} className="text-ha-blue" />
               <h2 className="text-sm font-semibold text-ha-text">Dashboard Templates</h2>
-              <span className="text-xs text-ha-textSecondary">— pick one to get started</span>
+              <span className="text-xs text-ha-textSecondary">— {templates.length} templates available</span>
             </div>
             <button onClick={onClose} className="p-1 rounded text-ha-textSecondary hover:text-ha-text hover:bg-ha-bg transition-colors cursor-pointer">
               <X size={16} />

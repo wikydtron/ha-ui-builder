@@ -161,3 +161,6 @@ export function validateDashboard(dashboard: DashboardConfig): ValidationResult 
     info,
   };
 }
+
+// Alias for backward compatibility
+export const validateCardConfig = validateDashboard;

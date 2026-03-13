@@ -18,46 +18,89 @@
           }
         },
         {
-          "id": "card-doors-windows",
-          "type": "entities",
+          "id": "card-people-location",
+          "type": "glance",
           "config": {
-            "title": "Doors & Windows",
+            "title": "Family Location",
             "entities": [
-              "binary_sensor.door_front",
-              "binary_sensor.window_kitchen",
-              "cover.garage_door"
+              "person.john",
+              "person.sarah",
+              "person.emma"
             ],
-            "state_color": true
+            "show_state": true,
+            "columns": 3
           }
         },
         {
-          "id": "card-motion",
+          "id": "card-motion-glance",
           "type": "glance",
           "config": {
             "title": "Motion Sensors",
             "entities": [
-              "binary_sensor.motion_living",
-              "binary_sensor.smoke_kitchen"
+              "binary_sensor.living_room_motion",
+              "binary_sensor.kitchen_motion",
+              "binary_sensor.hallway_motion"
             ],
             "show_state": true,
+            "state_color": true
+          }
+        },
+        {
+          "id": "card-safety-alerts",
+          "type": "entities",
+          "config": {
+            "title": "Safety Sensors",
+            "entities": [
+              "binary_sensor.smoke_detector_kitchen",
+              "binary_sensor.water_leak_basement"
+            ],
             "state_color": true
           }
         }
       ]
     },
     {
-      "id": "view-access",
+      "id": "view-locks-doors",
       "title": "Access",
       "path": "access",
-      "icon": "mdi:door",
+      "icon": "mdi:door-closed-lock",
       "layout": "masonry",
       "cards": [
         {
-          "id": "card-person-frank",
-          "type": "entity",
+          "id": "card-locks",
+          "type": "entities",
           "config": {
-            "entity": "person.frank",
-            "name": "Frank"
+            "title": "Locks",
+            "entities": [
+              "lock.front_door",
+              "lock.back_door",
+              "lock.garage_entry"
+            ],
+            "state_color": true
+          }
+        },
+        {
+          "id": "card-doors",
+          "type": "entities",
+          "config": {
+            "title": "Doors & Garage",
+            "entities": [
+              "binary_sensor.front_door",
+              "binary_sensor.back_door",
+              "cover.garage_door"
+            ],
+            "state_color": true
+          }
+        },
+        {
+          "id": "card-button-garage",
+          "type": "button",
+          "config": {
+            "entity": "cover.garage_door",
+            "name": "Garage Door",
+            "icon": "mdi:garage",
+            "show_state": true,
+            "tap_action": { "action": "toggle" }
           }
         },
         {
@@ -72,14 +115,59 @@
           }
         },
         {
-          "id": "card-cover-garage",
+          "id": "card-vacation-mode",
           "type": "button",
           "config": {
-            "entity": "cover.garage_door",
-            "name": "Garage Door",
-            "icon": "mdi:garage",
+            "entity": "input_boolean.vacation_mode",
+            "name": "Vacation Mode",
+            "icon": "mdi:airplane",
             "show_state": true,
             "tap_action": { "action": "toggle" }
+          }
+        }
+      ]
+    },
+    {
+      "id": "view-motion-history",
+      "title": "History",
+      "path": "security-history",
+      "icon": "mdi:history",
+      "layout": "masonry",
+      "cards": [
+        {
+          "id": "card-motion-history",
+          "type": "history-graph",
+          "config": {
+            "title": "Motion — Last 24h",
+            "entities": [
+              { "entity": "binary_sensor.living_room_motion", "name": "Living Room" },
+              { "entity": "binary_sensor.kitchen_motion", "name": "Kitchen" },
+              { "entity": "binary_sensor.hallway_motion", "name": "Hallway" }
+            ],
+            "hours_to_show": 24
+          }
+        },
+        {
+          "id": "card-door-history",
+          "type": "history-graph",
+          "config": {
+            "title": "Door Activity — Last 24h",
+            "entities": [
+              { "entity": "binary_sensor.front_door", "name": "Front Door" },
+              { "entity": "binary_sensor.back_door", "name": "Back Door" }
+            ],
+            "hours_to_show": 24
+          }
+        },
+        {
+          "id": "card-battery-sensors",
+          "type": "entities",
+          "config": {
+            "title": "Sensor Batteries",
+            "entities": [
+              "sensor.front_door_battery",
+              "sensor.garage_door_battery"
+            ]
           }
         }
       ]

@@ -3,8 +3,8 @@
   "title": "Energy Dashboard",
   "views": [
     {
-      "id": "view-energy",
-      "title": "Energy",
+      "id": "view-energy-overview",
+      "title": "Overview",
       "path": "energy",
       "icon": "mdi:lightning-bolt",
       "layout": "masonry",
@@ -14,9 +14,10 @@
           "type": "gauge",
           "config": {
             "entity": "sensor.solar_power",
-            "name": "Solar",
+            "name": "Solar Production",
             "min": 0,
             "max": 5000,
+            "unit": "W",
             "severity": {
               "green": 2000,
               "yellow": 500,
@@ -25,32 +26,51 @@
           }
         },
         {
-          "id": "card-gauge-grid",
+          "id": "card-gauge-power",
           "type": "gauge",
           "config": {
-            "entity": "sensor.grid_power",
-            "name": "Grid",
+            "entity": "sensor.power_consumption",
+            "name": "Consumption",
             "min": 0,
-            "max": 3000
+            "max": 5000,
+            "unit": "W",
+            "severity": {
+              "green": 0,
+              "yellow": 2000,
+              "red": 3500
+            }
           }
         },
         {
-          "id": "card-gauge-battery",
-          "type": "gauge",
+          "id": "card-energy-summary",
+          "type": "entities",
           "config": {
-            "entity": "sensor.battery_level",
-            "name": "Battery",
-            "min": 0,
-            "max": 100
+            "title": "Today's Energy",
+            "entities": [
+              "sensor.energy_daily",
+              "sensor.solar_power",
+              "sensor.power_consumption"
+            ]
           }
         },
         {
-          "id": "card-history-energy",
+          "id": "card-history-power",
           "type": "history-graph",
           "config": {
-            "entities": ["sensor.energy_daily"],
-            "hours_to_show": 48,
-            "title": "Energy Usage (48h)"
+            "title": "Power — Last 24h",
+            "entities": [
+              { "entity": "sensor.solar_power", "name": "Solar" },
+              { "entity": "sensor.power_consumption", "name": "Usage" }
+            ],
+            "hours_to_show": 24,
+            "refresh_interval": 60
+          }
+        },
+        {
+          "id": "card-markdown-energy",
+          "type": "markdown",
+          "config": {
+            "content": "## ⚡ Energy Summary\n\n☀️ **Solar Now:** {{ states('sensor.solar_power') }} W\n🔌 **Usage Now:** {{ states('sensor.power_consumption') }} W\n📅 **Today:** {{ states('sensor.energy_daily') }} kWh"
           }
         }
       ]
@@ -63,25 +83,125 @@
       "layout": "masonry",
       "cards": [
         {
-          "id": "card-history-solar",
-          "type": "history-graph",
+          "id": "card-solar-gauge",
+          "type": "gauge",
           "config": {
-            "entities": ["sensor.solar_power"],
-            "hours_to_show": 24,
-            "title": "Solar Output (24h)"
+            "entity": "sensor.solar_power",
+            "name": "Solar Output",
+            "min": 0,
+            "max": 5000,
+            "unit": "W",
+            "severity": {
+              "green": 2000,
+              "yellow": 800,
+              "red": 0
+            }
           }
         },
         {
-          "id": "card-power-stats",
+          "id": "card-solar-history",
+          "type": "history-graph",
+          "config": {
+            "title": "Solar Production — 7 Days",
+            "entities": [
+              { "entity": "sensor.solar_power", "name": "Solar W" }
+            ],
+            "hours_to_show": 168,
+            "refresh_interval": 300
+          }
+        },
+        {
+          "id": "card-solar-entity",
+          "type": "entity",
+          "config": {
+            "entity": "sensor.solar_power",
+            "name": "Current Solar Output",
+            "icon": "mdi:solar-power-variant"
+          }
+        }
+      ]
+    },
+    {
+      "id": "view-appliances",
+      "title": "Appliances",
+      "path": "appliances",
+      "icon": "mdi:washing-machine",
+      "layout": "masonry",
+      "cards": [
+        {
+          "id": "card-washing-power",
+          "type": "entity",
+          "config": {
+            "entity": "sensor.washing_machine_power",
+            "name": "Washing Machine",
+            "icon": "mdi:washing-machine"
+          }
+        },
+        {
+          "id": "card-washing-binary",
+          "type": "entity",
+          "config": {
+            "entity": "binary_sensor.washing_machine",
+            "name": "Running",
+            "icon": "mdi:washing-machine"
+          }
+        },
+        {
+          "id": "card-switches-energy",
           "type": "entities",
           "config": {
-            "title": "Power Stats",
+            "title": "Controllable Loads",
             "entities": [
-              "sensor.solar_power",
-              "sensor.grid_power",
-              "sensor.battery_level",
-              "sensor.energy_daily"
-            ]
+              "switch.coffee_maker",
+              "switch.garage_heater",
+              "switch.office_monitor_power",
+              "switch.living_room_outlet"
+            ],
+            "state_color": true
+          }
+        },
+        {
+          "id": "card-appliance-history",
+          "type": "history-graph",
+          "config": {
+            "title": "Appliance Power — 24h",
+            "entities": [
+              { "entity": "sensor.washing_machine_power", "name": "Washing Machine" }
+            ],
+            "hours_to_show": 24
+          }
+        }
+      ]
+    },
+    {
+      "id": "view-energy-history",
+      "title": "History",
+      "path": "energy-history",
+      "icon": "mdi:chart-line",
+      "layout": "masonry",
+      "cards": [
+        {
+          "id": "card-daily-history",
+          "type": "history-graph",
+          "config": {
+            "title": "Daily Energy",
+            "entities": [
+              { "entity": "sensor.energy_daily", "name": "kWh" }
+            ],
+            "hours_to_show": 168
+          }
+        },
+        {
+          "id": "card-power-history-week",
+          "type": "history-graph",
+          "config": {
+            "title": "Solar vs Consumption — 7 Days",
+            "entities": [
+              { "entity": "sensor.solar_power", "name": "Solar" },
+              { "entity": "sensor.power_consumption", "name": "Consumed" }
+            ],
+            "hours_to_show": 168,
+            "refresh_interval": 600
           }
         }
       ]
