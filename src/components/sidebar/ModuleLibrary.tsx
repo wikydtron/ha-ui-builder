@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Search, Trash2, Plus } from 'lucide-react';
 import { useDraggable } from '@dnd-kit/core';
 import { useModuleStore } from '../../store/moduleStore';
+import { generateId } from '../../utils/ids';
 import { useDashboardStore } from '../../store/dashboardStore';
 import type { ModuleTemplate } from '../../types';
 
@@ -21,7 +22,7 @@ export function ModuleLibrary() {
   const handleAddToCanvas = (mod: ModuleTemplate) => {
     const newCard = {
       ...mod.cardConfig,
-      id: crypto.randomUUID(),
+      id: generateId(),
       config: { ...mod.cardConfig.config },
     };
     addCard(activeViewId, newCard);

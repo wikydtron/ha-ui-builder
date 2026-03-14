@@ -5,220 +5,137 @@
     {
       "id": "view-mobile-home",
       "title": "Home",
-      "path": "home",
+      "path": "mobile-home",
       "icon": "mdi:home",
-      "layout": "masonry",
+      "viewType": "masonry",
       "cards": [
         {
-          "id": "card-mobile-weather",
+          "id": "card-m-weather",
           "type": "weather-forecast",
+          "colSpan": 12,
           "config": {
             "entity": "weather.home",
             "show_forecast": true,
-            "forecast_type": "daily"
+            "forecast_type": "hourly"
           }
         },
         {
-          "id": "card-mobile-status",
+          "id": "card-m-who-home",
           "type": "glance",
+          "colSpan": 12,
           "config": {
-            "title": "Quick Status",
+            "title": "Who's Home",
+            "entities": ["person.john", "person.sarah"],
+            "show_state": true
+          }
+        },
+        {
+          "id": "card-m-quick",
+          "type": "entities",
+          "colSpan": 12,
+          "config": {
+            "title": "Quick Controls",
             "entities": [
-              "alarm_control_panel.home",
-              "lock.front_door",
-              "cover.garage_door",
-              "input_boolean.guest_mode"
-            ],
-            "show_state": true,
-            "columns": 2
+              {"entity": "light.living_room", "name": "Living Room Lights"},
+              {"entity": "climate.living_room", "name": "Thermostat"},
+              {"entity": "lock.front_door", "name": "Front Door"},
+              {"entity": "cover.garage_door", "name": "Garage"},
+              {"entity": "alarm_control_panel.home", "name": "Alarm"}
+            ]
           }
         },
         {
-          "id": "card-mobile-lights-all",
-          "type": "button",
+          "id": "card-m-lights",
+          "type": "entities",
+          "colSpan": 12,
           "config": {
-            "entity": "script.all_lights_off",
-            "name": "All Lights Off",
-            "icon": "mdi:lightbulb-group-off",
-            "show_state": false,
-            "tap_action": { "action": "call-service", "service": "script.turn_on", "target": { "entity_id": "script.all_lights_off" } }
+            "title": "All Lights",
+            "entities": [
+              {"entity": "light.living_room", "name": "Living Room"},
+              {"entity": "light.kitchen", "name": "Kitchen"},
+              {"entity": "light.bedroom", "name": "Bedroom"},
+              {"entity": "light.office", "name": "Office"},
+              {"entity": "light.bathroom", "name": "Bathroom"},
+              {"entity": "light.garage", "name": "Garage"}
+            ]
           }
         },
         {
-          "id": "card-mobile-sleep",
-          "type": "button",
-          "config": {
-            "entity": "input_boolean.sleep_mode",
-            "name": "Sleep Mode",
-            "icon": "mdi:sleep",
-            "show_state": true,
-            "tap_action": { "action": "toggle" }
-          }
-        }
-      ]
-    },
-    {
-      "id": "view-mobile-lights",
-      "title": "Lights",
-      "path": "lights",
-      "icon": "mdi:lightbulb",
-      "layout": "masonry",
-      "cards": [
-        {
-          "id": "card-mobile-living-light",
-          "type": "button",
-          "config": {
-            "entity": "light.living_room_main",
-            "name": "Living Room",
-            "icon": "mdi:sofa",
-            "show_state": true,
-            "tap_action": { "action": "toggle" }
-          }
-        },
-        {
-          "id": "card-mobile-kitchen-light",
-          "type": "button",
-          "config": {
-            "entity": "light.kitchen_overhead",
-            "name": "Kitchen",
-            "icon": "mdi:countertop",
-            "show_state": true,
-            "tap_action": { "action": "toggle" }
-          }
-        },
-        {
-          "id": "card-mobile-bedroom-light",
-          "type": "button",
-          "config": {
-            "entity": "light.master_bedroom",
-            "name": "Bedroom",
-            "icon": "mdi:bed",
-            "show_state": true,
-            "tap_action": { "action": "toggle" }
-          }
-        },
-        {
-          "id": "card-mobile-office-light",
-          "type": "button",
-          "config": {
-            "entity": "light.office_desk",
-            "name": "Office",
-            "icon": "mdi:desk-lamp",
-            "show_state": true,
-            "tap_action": { "action": "toggle" }
-          }
-        },
-        {
-          "id": "card-mobile-porch-light",
-          "type": "button",
-          "config": {
-            "entity": "light.front_porch",
-            "name": "Front Porch",
-            "icon": "mdi:outdoor-lamp",
-            "show_state": true,
-            "tap_action": { "action": "toggle" }
-          }
-        },
-        {
-          "id": "card-mobile-patio-light",
-          "type": "button",
-          "config": {
-            "entity": "light.backyard_patio",
-            "name": "Patio",
-            "icon": "mdi:string-lights",
-            "show_state": true,
-            "tap_action": { "action": "toggle" }
-          }
-        }
-      ]
-    },
-    {
-      "id": "view-mobile-climate",
-      "title": "Climate",
-      "path": "climate",
-      "icon": "mdi:thermometer",
-      "layout": "masonry",
-      "cards": [
-        {
-          "id": "card-mobile-thermostat",
+          "id": "card-m-climate",
           "type": "thermostat",
+          "colSpan": 12,
           "config": {
             "entity": "climate.living_room",
-            "name": "Main"
+            "name": "Living Room Thermostat"
           }
         },
         {
-          "id": "card-mobile-temp-outdoor",
-          "type": "entity",
+          "id": "card-m-media",
+          "type": "media-control",
+          "colSpan": 12,
           "config": {
-            "entity": "sensor.outdoor_temperature",
-            "name": "Outside",
-            "icon": "mdi:thermometer"
-          }
-        },
-        {
-          "id": "card-mobile-temps",
-          "type": "glance",
-          "config": {
-            "title": "Temperatures",
-            "entities": [
-              "sensor.living_room_temperature",
-              "sensor.kitchen_temperature",
-              "sensor.master_bedroom_temperature"
-            ],
-            "show_state": true
+            "entity": "media_player.living_room_speaker",
+            "name": "Now Playing"
           }
         }
       ]
     },
     {
-      "id": "view-mobile-security",
-      "title": "Security",
-      "path": "security",
-      "icon": "mdi:shield",
-      "layout": "masonry",
+      "id": "view-mobile-status",
+      "title": "Status",
+      "path": "mobile-status",
+      "icon": "mdi:information",
+      "viewType": "masonry",
       "cards": [
         {
-          "id": "card-mobile-alarm",
-          "type": "alarm-panel",
+          "id": "card-m-sensors",
+          "type": "entities",
+          "colSpan": 12,
           "config": {
-            "entity": "alarm_control_panel.home",
-            "name": "Alarm"
-          }
-        },
-        {
-          "id": "card-mobile-front-door",
-          "type": "button",
-          "config": {
-            "entity": "lock.front_door",
-            "name": "Front Door",
-            "icon": "mdi:door-closed-lock",
-            "show_state": true,
-            "tap_action": { "action": "toggle" }
-          }
-        },
-        {
-          "id": "card-mobile-garage",
-          "type": "button",
-          "config": {
-            "entity": "cover.garage_door",
-            "name": "Garage",
-            "icon": "mdi:garage",
-            "show_state": true,
-            "tap_action": { "action": "toggle" }
-          }
-        },
-        {
-          "id": "card-mobile-people",
-          "type": "glance",
-          "config": {
-            "title": "Family",
+            "title": "Sensors",
             "entities": [
-              "person.john",
-              "person.sarah",
-              "person.emma"
-            ],
-            "show_state": true
+              {"entity": "sensor.outdoor_temperature", "name": "Outdoor Temp"},
+              {"entity": "sensor.living_room_temperature", "name": "Indoor Temp"},
+              {"entity": "sensor.humidity", "name": "Humidity"},
+              {"entity": "sensor.power_consumption", "name": "Power Usage"},
+              {"entity": "sensor.energy_today", "name": "Energy Today"}
+            ]
+          }
+        },
+        {
+          "id": "card-m-security",
+          "type": "entities",
+          "colSpan": 12,
+          "config": {
+            "title": "Security",
+            "entities": [
+              {"entity": "binary_sensor.front_door", "name": "Front Door"},
+              {"entity": "binary_sensor.back_door", "name": "Back Door"},
+              {"entity": "binary_sensor.garage_door", "name": "Garage"},
+              {"entity": "binary_sensor.motion_living_room", "name": "Motion: Living Room"},
+              {"entity": "binary_sensor.motion_hallway", "name": "Motion: Hallway"}
+            ]
+          }
+        },
+        {
+          "id": "card-m-energy",
+          "type": "statistics-graph",
+          "colSpan": 12,
+          "config": {
+            "title": "Energy (24h)",
+            "entities": [{"entity": "sensor.power_consumption"}],
+            "period": "hour",
+            "chart_type": "line",
+            "days_to_show": 1
+          }
+        },
+        {
+          "id": "card-m-log",
+          "type": "logbook",
+          "colSpan": 12,
+          "config": {
+            "title": "Recent Activity",
+            "hours_to_show": 6
           }
         }
       ]

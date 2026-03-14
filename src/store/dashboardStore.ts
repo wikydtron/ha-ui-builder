@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { generateId } from '../utils/ids';
 import type { DashboardConfig, CardConfig, ViewConfig } from '../types';
 
 // ============================================================
@@ -29,10 +30,10 @@ function saveToStorage(dashboard: DashboardConfig): void {
 // Default state
 // ============================================================
 
-const defaultViewId = crypto.randomUUID();
+const defaultViewId = generateId();
 
 const defaultDashboard: DashboardConfig = {
-  id: crypto.randomUUID(),
+  id: generateId(),
   title: 'My Dashboard',
   views: [
     {
@@ -42,6 +43,7 @@ const defaultDashboard: DashboardConfig = {
       path: 'home',
       cards: [],
       layout: 'masonry',
+      viewType: 'masonry',
     },
   ],
 };
@@ -65,6 +67,7 @@ interface DashboardState {
   addCard: (viewId: string, card: CardConfig) => void;
   removeCard: (viewId: string, cardId: string) => void;
   updateCard: (viewId: string, cardId: string, config: Record<string, unknown>) => void;
+  updateCardColSpan: (viewId: string, cardId: string, colSpan: number) => void;
   moveCard: (viewId: string, fromIndex: number, toIndex: number) => void;
   duplicateCard: (viewId: string, cardId: string) => void;
 
@@ -89,7 +92,7 @@ function mapView(
 function cloneCard(card: CardConfig): CardConfig {
   return {
     ...card,
-    id: crypto.randomUUID(),
+    id: generateId(),
     config: { ...card.config },
     children: card.children?.map(cloneCard),
   };
@@ -117,12 +120,13 @@ export const useDashboardStore = create<DashboardState>()((set) => {
 
     addView: (partial) => {
       const newView: ViewConfig = {
-        id: crypto.randomUUID(),
+        id: generateId(),
         title: partial?.title ?? 'New View',
         icon: partial?.icon,
         path: partial?.path,
         cards: [],
         layout: partial?.layout ?? 'masonry',
+        viewType: partial?.viewType ?? 'masonry',
       };
       set((s) => ({
         dashboard: {
@@ -167,7 +171,7 @@ export const useDashboardStore = create<DashboardState>()((set) => {
     // ──── Card actions ────────────────────────────────────────
 
     addCard: (viewId, card) => {
-      const newCard: CardConfig = { ...card, id: card.id || crypto.randomUUID() };
+      const newCard: CardConfig = { ...card, id: card.id || generateId() };
       set((s) => ({
         dashboard: {
           ...s.dashboard,
@@ -202,6 +206,20 @@ export const useDashboardStore = create<DashboardState>()((set) => {
             ...v,
             cards: v.cards.map((c) =>
               c.id === cardId ? { ...c, config: { ...c.config, ...config } } : c,
+            ),
+          })),
+        },
+      }));
+    },
+
+    updateCardColSpan: (viewId, cardId, colSpan) => {
+      set((s) => ({
+        dashboard: {
+          ...s.dashboard,
+          views: mapView(s.dashboard.views, viewId, (v) => ({
+            ...v,
+            cards: v.cards.map((c) =>
+              c.id === cardId ? { ...c, colSpan } : c,
             ),
           })),
         },

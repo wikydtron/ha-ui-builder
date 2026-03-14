@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { generateId } from '../utils/ids';
 import type { ModuleTemplate, CardConfig } from '../types';
 
 // ============================================================
@@ -57,7 +58,7 @@ export const useModuleStore = create<ModuleState>()((set, get) => {
 
     saveModule: (name, description, cardConfig, tags) => {
       const newModule: ModuleTemplate = {
-        id: crypto.randomUUID(),
+        id: generateId(),
         name,
         description,
         cardConfig,

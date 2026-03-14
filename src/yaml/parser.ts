@@ -1,5 +1,6 @@
+import { generateId } from '../utils/ids';
 import yaml from 'js-yaml';
-import type { CardConfig, ViewConfig, DashboardConfig } from '../types';
+import type { CardConfig, ViewConfig, DashboardConfig, ViewType } from '../types';
 import { cardSchemas } from '../schemas';
 
 // ============================================================
@@ -13,21 +14,13 @@ const CONTAINER_CARD_TYPES = new Set([
 ]);
 
 // ============================================================
-// ID generation
-// ============================================================
-
-function generateId(): string {
-  return crypto.randomUUID();
-}
-
-// ============================================================
 // Card parsing
 // ============================================================
 
 /**
  * Recursively convert a raw Lovelace card object into internal CardConfig.
  * - Known card types: fields are placed into `config` based on the schema.
- * - Unknown card types: all non-type fields stored in `config.rawConfig`.
+ * - Unknown / custom card types: all non-type fields stored in `config.rawConfig`.
  * - Container cards: nested `cards` array → `children`.
  * - Never drops content.
  */
@@ -45,19 +38,16 @@ function lovelaceToCard(raw: Record<string, unknown>): CardConfig {
     id: generateId(),
     type,
     config: {},
+    colSpan: 4, // default
   };
 
   if (schema) {
     // Known card type — map fields according to schema
-    const knownFieldNames = new Set(schema.fields.map((f) => f.name));
     for (const [key, value] of Object.entries(rest)) {
-      // Put all fields into config — known and unknown alike
       card.config[key] = value;
     }
-    // Any field not in the schema is still kept in config (no data loss)
-    void knownFieldNames; // used for potential future validation
   } else {
-    // Unknown card type — store everything in rawConfig so nothing is lost
+    // Unknown / custom card type — store everything in rawConfig so nothing is lost
     card.config = { rawConfig: rest };
   }
 
@@ -71,6 +61,8 @@ function lovelaceToCard(raw: Record<string, unknown>): CardConfig {
       }
       return lovelaceToCard(child as Record<string, unknown>);
     });
+    // Container cards default to full width
+    card.colSpan = 12;
   } else if (Array.isArray(rawChildren)) {
     // Non-standard container (custom card with cards array) — keep in config
     card.config['cards'] = rawChildren;
@@ -90,7 +82,7 @@ function lovelaceToView(raw: Record<string, unknown>, index: number): ViewConfig
     path,
     cards: rawCards,
     panel,
-    type: viewType,
+    type: rawViewType,
     ...rest
   } = raw;
 
@@ -98,12 +90,18 @@ function lovelaceToView(raw: Record<string, unknown>, index: number): ViewConfig
   const viewTitle =
     typeof title === 'string' && title ? title : `View ${index + 1}`;
 
-  let layout: ViewConfig['layout'] = 'masonry';
-  if (viewType === 'sidebar') {
-    layout = 'sidebar';
-  } else if (panel === true) {
-    layout = 'panel';
+  // Determine viewType from HA YAML
+  let viewType: ViewType = 'masonry';
+  if (typeof rawViewType === 'string') {
+    if (rawViewType === 'sections') viewType = 'sections';
+    else if (rawViewType === 'panel') viewType = 'panel';
+    else if (rawViewType === 'masonry') viewType = 'masonry';
   }
+  if (panel === true) viewType = 'panel';
+
+  // Legacy layout mapping
+  let layout: ViewConfig['layout'] = 'masonry';
+  if (viewType === 'panel') layout = 'panel';
 
   const cards: CardConfig[] = [];
   if (Array.isArray(rawCards)) {
@@ -125,18 +123,20 @@ function lovelaceToView(raw: Record<string, unknown>, index: number): ViewConfig
     id: generateId(),
     title: viewTitle,
     cards,
+    viewType,
+    layout,
   };
 
   if (typeof icon === 'string' && icon) view.icon = icon;
-  if (typeof path === 'string' && path) view.path = path;
-  if (layout !== 'masonry') view.layout = layout;
-
-  // Preserve any extra view-level keys (theme, badges, etc.) — no data loss
-  if (Object.keys(rest).length > 0) {
-    // Store extra view config on the view object for round-trip fidelity
-    // This goes into the first card or is silently preserved
-    void rest;
+  if (typeof path === 'string' && path) {
+    view.path = path;
+  } else {
+    // Generate path from title
+    view.path = viewTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
   }
+
+  // Preserve extra view-level keys (theme, badges, etc.)
+  void rest;
 
   return view;
 }
@@ -277,8 +277,10 @@ function parseSingleCard(doc: Record<string, unknown>): ParseResult {
         {
           id: generateId(),
           title: 'Imported View',
+          path: 'imported',
           cards: [card],
           layout: 'masonry',
+          viewType: 'masonry',
         },
       ],
     },
@@ -311,8 +313,10 @@ function parseCardArray(arr: unknown[]): ParseResult {
         {
           id: generateId(),
           title: 'Imported View',
+          path: 'imported',
           cards,
           layout: 'masonry',
+          viewType: 'masonry',
         },
       ],
     },

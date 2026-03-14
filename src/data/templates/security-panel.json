@@ -3,171 +3,193 @@
   "title": "Security Panel",
   "views": [
     {
-      "id": "view-security-overview",
-      "title": "Security",
-      "path": "security",
+      "id": "view-alarm",
+      "title": "Alarm",
+      "path": "alarm",
       "icon": "mdi:shield-home",
-      "layout": "masonry",
+      "viewType": "masonry",
       "cards": [
         {
-          "id": "card-alarm",
+          "id": "card-alarm-panel",
           "type": "alarm-panel",
+          "colSpan": 6,
           "config": {
             "entity": "alarm_control_panel.home",
-            "name": "Home Alarm"
+            "name": "Home Security",
+            "states": ["armed_away", "armed_home", "armed_night", "disarmed"]
           }
         },
         {
-          "id": "card-people-location",
-          "type": "glance",
-          "config": {
-            "title": "Family Location",
-            "entities": [
-              "person.john",
-              "person.sarah",
-              "person.emma"
-            ],
-            "show_state": true,
-            "columns": 3
-          }
-        },
-        {
-          "id": "card-motion-glance",
-          "type": "glance",
-          "config": {
-            "title": "Motion Sensors",
-            "entities": [
-              "binary_sensor.living_room_motion",
-              "binary_sensor.kitchen_motion",
-              "binary_sensor.hallway_motion"
-            ],
-            "show_state": true,
-            "state_color": true
-          }
-        },
-        {
-          "id": "card-safety-alerts",
+          "id": "card-alarm-status",
           "type": "entities",
+          "colSpan": 6,
           "config": {
-            "title": "Safety Sensors",
+            "title": "Security Status",
             "entities": [
-              "binary_sensor.smoke_detector_kitchen",
-              "binary_sensor.water_leak_basement"
+              {"entity": "alarm_control_panel.home", "name": "Alarm Panel"},
+              {"entity": "binary_sensor.front_door", "name": "Front Door"},
+              {"entity": "binary_sensor.back_door", "name": "Back Door"},
+              {"entity": "binary_sensor.garage_door", "name": "Garage Door"},
+              {"entity": "binary_sensor.motion_living_room", "name": "Living Room Motion"},
+              {"entity": "binary_sensor.motion_hallway", "name": "Hallway Motion"}
+            ]
+          }
+        },
+        {
+          "id": "card-door-windows",
+          "type": "glance",
+          "colSpan": 12,
+          "config": {
+            "title": "Doors & Windows",
+            "entities": [
+              "binary_sensor.front_door",
+              "binary_sensor.back_door",
+              "binary_sensor.garage_door",
+              "binary_sensor.living_room_window",
+              "binary_sensor.bedroom_window",
+              "binary_sensor.office_window",
+              "binary_sensor.bathroom_window",
+              "lock.front_door"
             ],
-            "state_color": true
+            "show_state": true,
+            "columns": 4
           }
         }
       ]
     },
     {
-      "id": "view-locks-doors",
+      "id": "view-cameras",
+      "title": "Cameras",
+      "path": "cameras",
+      "icon": "mdi:cctv",
+      "viewType": "masonry",
+      "cards": [
+        {
+          "id": "card-cam-front",
+          "type": "picture-glance",
+          "colSpan": 6,
+          "config": {
+            "title": "Front Door",
+            "camera_image": "camera.front_door",
+            "camera_view": "live",
+            "entities": [
+              "binary_sensor.front_door_motion",
+              "lock.front_door",
+              "light.porch"
+            ]
+          }
+        },
+        {
+          "id": "card-cam-back",
+          "type": "picture-glance",
+          "colSpan": 6,
+          "config": {
+            "title": "Backyard",
+            "camera_image": "camera.backyard",
+            "camera_view": "live",
+            "entities": [
+              "binary_sensor.backyard_motion",
+              "light.backyard",
+              "switch.garden_lights"
+            ]
+          }
+        },
+        {
+          "id": "card-cam-garage",
+          "type": "picture-glance",
+          "colSpan": 6,
+          "config": {
+            "title": "Garage",
+            "camera_image": "camera.garage",
+            "camera_view": "live",
+            "entities": [
+              "cover.garage_door",
+              "light.garage",
+              "binary_sensor.garage_motion"
+            ]
+          }
+        },
+        {
+          "id": "card-cam-driveway",
+          "type": "picture-glance",
+          "colSpan": 6,
+          "config": {
+            "title": "Driveway",
+            "camera_image": "camera.driveway",
+            "camera_view": "live",
+            "entities": [
+              "binary_sensor.driveway_motion"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "view-access",
       "title": "Access",
       "path": "access",
-      "icon": "mdi:door-closed-lock",
-      "layout": "masonry",
+      "icon": "mdi:key",
+      "viewType": "masonry",
       "cards": [
         {
           "id": "card-locks",
           "type": "entities",
+          "colSpan": 6,
           "config": {
             "title": "Locks",
             "entities": [
-              "lock.front_door",
-              "lock.back_door",
-              "lock.garage_entry"
-            ],
-            "state_color": true
-          }
-        },
-        {
-          "id": "card-doors",
-          "type": "entities",
-          "config": {
-            "title": "Doors & Garage",
-            "entities": [
-              "binary_sensor.front_door",
-              "binary_sensor.back_door",
-              "cover.garage_door"
-            ],
-            "state_color": true
-          }
-        },
-        {
-          "id": "card-button-garage",
-          "type": "button",
-          "config": {
-            "entity": "cover.garage_door",
-            "name": "Garage Door",
-            "icon": "mdi:garage",
-            "show_state": true,
-            "tap_action": { "action": "toggle" }
-          }
-        },
-        {
-          "id": "card-guest-mode",
-          "type": "button",
-          "config": {
-            "entity": "input_boolean.guest_mode",
-            "name": "Guest Mode",
-            "icon": "mdi:account-group",
-            "show_state": true,
-            "tap_action": { "action": "toggle" }
-          }
-        },
-        {
-          "id": "card-vacation-mode",
-          "type": "button",
-          "config": {
-            "entity": "input_boolean.vacation_mode",
-            "name": "Vacation Mode",
-            "icon": "mdi:airplane",
-            "show_state": true,
-            "tap_action": { "action": "toggle" }
-          }
-        }
-      ]
-    },
-    {
-      "id": "view-motion-history",
-      "title": "History",
-      "path": "security-history",
-      "icon": "mdi:history",
-      "layout": "masonry",
-      "cards": [
-        {
-          "id": "card-motion-history",
-          "type": "history-graph",
-          "config": {
-            "title": "Motion — Last 24h",
-            "entities": [
-              { "entity": "binary_sensor.living_room_motion", "name": "Living Room" },
-              { "entity": "binary_sensor.kitchen_motion", "name": "Kitchen" },
-              { "entity": "binary_sensor.hallway_motion", "name": "Hallway" }
-            ],
-            "hours_to_show": 24
-          }
-        },
-        {
-          "id": "card-door-history",
-          "type": "history-graph",
-          "config": {
-            "title": "Door Activity — Last 24h",
-            "entities": [
-              { "entity": "binary_sensor.front_door", "name": "Front Door" },
-              { "entity": "binary_sensor.back_door", "name": "Back Door" }
-            ],
-            "hours_to_show": 24
-          }
-        },
-        {
-          "id": "card-battery-sensors",
-          "type": "entities",
-          "config": {
-            "title": "Sensor Batteries",
-            "entities": [
-              "sensor.front_door_battery",
-              "sensor.garage_door_battery"
+              {"entity": "lock.front_door", "name": "Front Door"},
+              {"entity": "lock.back_door", "name": "Back Door"},
+              {"entity": "lock.garage_entry", "name": "Garage Entry"}
             ]
+          }
+        },
+        {
+          "id": "card-access-log",
+          "type": "logbook",
+          "colSpan": 6,
+          "config": {
+            "title": "Recent Activity",
+            "entities": [
+              "lock.front_door",
+              "binary_sensor.front_door",
+              "alarm_control_panel.home"
+            ],
+            "hours_to_show": 24
+          }
+        },
+        {
+          "id": "card-scene-away",
+          "type": "button",
+          "colSpan": 4,
+          "config": {
+            "entity": "scene.leaving_home",
+            "name": "Leave Home",
+            "icon": "mdi:exit-run",
+            "tap_action": {"action": "call-service", "service": "scene.turn_on", "target": {"entity_id": "scene.leaving_home"}},
+            "hold_action": {"action": "more-info"}
+          }
+        },
+        {
+          "id": "card-scene-sleep",
+          "type": "button",
+          "colSpan": 4,
+          "config": {
+            "entity": "scene.goodnight",
+            "name": "Good Night",
+            "icon": "mdi:weather-night",
+            "tap_action": {"action": "call-service", "service": "scene.turn_on", "target": {"entity_id": "scene.goodnight"}}
+          }
+        },
+        {
+          "id": "card-scene-home",
+          "type": "button",
+          "colSpan": 4,
+          "config": {
+            "entity": "scene.arriving_home",
+            "name": "Arrive Home",
+            "icon": "mdi:home-import-outline",
+            "tap_action": {"action": "call-service", "service": "scene.turn_on", "target": {"entity_id": "scene.arriving_home"}}
           }
         }
       ]

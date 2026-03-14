@@ -3,15 +3,16 @@
   "title": "Desktop Power User",
   "views": [
     {
-      "id": "view-command-center",
-      "title": "Command Center",
-      "path": "command-center",
-      "icon": "mdi:monitor-dashboard",
-      "layout": "masonry",
+      "id": "view-desk-overview",
+      "title": "Overview",
+      "path": "desk-overview",
+      "icon": "mdi:view-dashboard",
+      "viewType": "sections",
       "cards": [
         {
-          "id": "card-pw-weather",
+          "id": "card-d-weather",
           "type": "weather-forecast",
+          "colSpan": 3,
           "config": {
             "entity": "weather.home",
             "show_forecast": true,
@@ -19,339 +20,341 @@
           }
         },
         {
-          "id": "card-pw-markdown-status",
-          "type": "markdown",
+          "id": "card-d-people",
+          "type": "glance",
+          "colSpan": 3,
           "config": {
-            "content": "## 🏠 System Status  `{{ now().strftime('%A %H:%M') }}`\n\n| | |\n|---|---|\n| **Mode** | {{ states('input_select.house_mode') }} |\n| **Lights on** | {{ states \\| selectattr('domain','eq','light') \\| selectattr('state','eq','on') \\| list \\| count }} |\n| **Temp** | {{ states('sensor.living_room_temperature') }}°C / {{ states('sensor.outdoor_temperature') }}°C out |\n| **Solar** | {{ states('sensor.solar_power') }} W |\n| **Usage** | {{ states('sensor.power_consumption') }} W |"
+            "title": "People",
+            "entities": ["person.john", "person.sarah", "person.emma", "person.jake"],
+            "show_state": true,
+            "columns": 2
           }
         },
         {
-          "id": "card-pw-alarm",
+          "id": "card-d-power",
+          "type": "sensor",
+          "colSpan": 3,
+          "config": {
+            "entity": "sensor.power_consumption",
+            "name": "Current Power",
+            "graph": "line",
+            "unit": "W"
+          }
+        },
+        {
+          "id": "card-d-alarm",
           "type": "alarm-panel",
+          "colSpan": 3,
           "config": {
             "entity": "alarm_control_panel.home",
-            "name": "Security System"
+            "name": "Alarm"
           }
         },
         {
-          "id": "card-pw-people",
-          "type": "glance",
-          "config": {
-            "title": "Family Location",
-            "entities": [
-              "person.john",
-              "person.sarah",
-              "person.emma"
-            ],
-            "show_state": true,
-            "columns": 3
-          }
-        },
-        {
-          "id": "card-pw-automations",
+          "id": "card-d-lights",
           "type": "entities",
+          "colSpan": 3,
+          "config": {
+            "title": "Lights",
+            "entities": [
+              "light.living_room",
+              "light.kitchen",
+              "light.bedroom",
+              "light.office"
+            ]
+          }
+        },
+        {
+          "id": "card-d-climate-1",
+          "type": "thermostat",
+          "colSpan": 3,
+          "config": {"entity": "climate.living_room", "name": "Living"}
+        },
+        {
+          "id": "card-d-climate-2",
+          "type": "thermostat",
+          "colSpan": 3,
+          "config": {"entity": "climate.bedroom", "name": "Bedroom"}
+        },
+        {
+          "id": "card-d-media-main",
+          "type": "media-control",
+          "colSpan": 3,
+          "config": {"entity": "media_player.living_room_tv", "name": "Living Room TV"}
+        },
+        {
+          "id": "card-d-energy-bar",
+          "type": "statistics-graph",
+          "colSpan": 12,
+          "config": {
+            "title": "Today's Energy by Hour",
+            "entities": [{"entity": "sensor.power_consumption"}],
+            "period": "hour",
+            "chart_type": "bar",
+            "days_to_show": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "view-desk-home",
+      "title": "Smart Home",
+      "path": "desk-home",
+      "icon": "mdi:home-automation",
+      "viewType": "sections",
+      "cards": [
+        {
+          "id": "card-dh-scene-morning",
+          "type": "button",
+          "colSpan": 2,
+          "config": {"entity": "scene.morning", "name": "Morning", "icon": "mdi:weather-sunrise"}
+        },
+        {
+          "id": "card-dh-scene-day",
+          "type": "button",
+          "colSpan": 2,
+          "config": {"entity": "scene.day", "name": "Day Mode", "icon": "mdi:weather-sunny"}
+        },
+        {
+          "id": "card-dh-scene-evening",
+          "type": "button",
+          "colSpan": 2,
+          "config": {"entity": "scene.evening", "name": "Evening", "icon": "mdi:weather-sunset"}
+        },
+        {
+          "id": "card-dh-scene-movie",
+          "type": "button",
+          "colSpan": 2,
+          "config": {"entity": "scene.movie_time", "name": "Movie Time", "icon": "mdi:movie"}
+        },
+        {
+          "id": "card-dh-scene-sleep",
+          "type": "button",
+          "colSpan": 2,
+          "config": {"entity": "scene.goodnight", "name": "Good Night", "icon": "mdi:weather-night"}
+        },
+        {
+          "id": "card-dh-scene-away",
+          "type": "button",
+          "colSpan": 2,
+          "config": {"entity": "scene.leaving_home", "name": "Leave Home", "icon": "mdi:exit-run"}
+        },
+        {
+          "id": "card-dh-automations",
+          "type": "entities",
+          "colSpan": 6,
           "config": {
             "title": "Automations",
             "entities": [
               "automation.morning_routine",
-              "automation.goodnight",
-              "automation.motion_lights_hallway",
+              "automation.evening_lights",
               "automation.away_mode",
-              "automation.garage_auto_close"
-            ],
-            "show_header_toggle": false
-          }
-        }
-      ]
-    },
-    {
-      "id": "view-all-lights",
-      "title": "Lights",
-      "path": "lights",
-      "icon": "mdi:lightbulb-group",
-      "layout": "masonry",
-      "cards": [
-        {
-          "id": "card-pw-indoor-lights",
-          "type": "entities",
-          "config": {
-            "title": "Indoor",
-            "show_header_toggle": true,
-            "entities": [
-              "light.living_room_main",
-              "light.living_room_lamp",
-              "light.kitchen_overhead",
-              "light.kitchen_under_cabinet",
-              "light.master_bedroom",
-              "light.master_bedroom_nightstand_left",
-              "light.master_bedroom_nightstand_right",
-              "light.kids_bedroom",
-              "light.bathroom_vanity",
-              "light.office_desk"
+              "automation.bedtime",
+              "automation.motion_lights_living_room",
+              "automation.climate_eco_mode"
             ]
           }
         },
         {
-          "id": "card-pw-outdoor-lights",
+          "id": "card-dh-scripts",
           "type": "entities",
+          "colSpan": 6,
           "config": {
-            "title": "Outdoor",
-            "show_header_toggle": true,
+            "title": "Scripts",
             "entities": [
-              "light.front_porch",
-              "light.backyard_patio",
-              "light.garage"
-            ]
-          }
-        },
-        {
-          "id": "card-pw-switches",
-          "type": "entities",
-          "config": {
-            "title": "Switches & Plugs",
-            "entities": [
-              "switch.living_room_outlet",
-              "switch.coffee_maker",
-              "switch.garage_heater",
-              "switch.office_monitor_power",
-              "switch.christmas_tree"
-            ],
-            "state_color": true
-          }
-        },
-        {
-          "id": "card-pw-scenes",
-          "type": "entities",
-          "config": {
-            "title": "Scene & Mode",
-            "entities": [
-              "input_select.house_mode",
-              "input_select.light_scene",
-              "input_number.default_brightness"
+              "script.all_lights_off",
+              "script.movie_mode",
+              "script.good_morning",
+              "script.lock_all",
+              "script.reset_thermostats"
             ]
           }
         }
       ]
     },
     {
-      "id": "view-climate-detail",
-      "title": "Climate",
-      "path": "climate",
-      "icon": "mdi:thermometer",
-      "layout": "masonry",
-      "cards": [
-        {
-          "id": "card-pw-thermo-living",
-          "type": "thermostat",
-          "config": {
-            "entity": "climate.living_room"
-          }
-        },
-        {
-          "id": "card-pw-thermo-upstairs",
-          "type": "thermostat",
-          "config": {
-            "entity": "climate.upstairs"
-          }
-        },
-        {
-          "id": "card-pw-thermo-office",
-          "type": "thermostat",
-          "config": {
-            "entity": "climate.office"
-          }
-        },
-        {
-          "id": "card-pw-gauge-living",
-          "type": "gauge",
-          "config": {
-            "entity": "sensor.living_room_temperature",
-            "name": "Living Room",
-            "min": 15,
-            "max": 35,
-            "unit": "°C"
-          }
-        },
-        {
-          "id": "card-pw-gauge-outdoor",
-          "type": "gauge",
-          "config": {
-            "entity": "sensor.outdoor_temperature",
-            "name": "Outdoor",
-            "min": -20,
-            "max": 40,
-            "unit": "°C"
-          }
-        },
-        {
-          "id": "card-pw-humidity",
-          "type": "gauge",
-          "config": {
-            "entity": "sensor.living_room_humidity",
-            "name": "Humidity",
-            "min": 0,
-            "max": 100,
-            "unit": "%"
-          }
-        },
-        {
-          "id": "card-pw-fans",
-          "type": "entities",
-          "config": {
-            "title": "Fans",
-            "entities": [
-              "fan.living_room_ceiling",
-              "fan.master_bedroom_ceiling",
-              "fan.office_desk"
-            ]
-          }
-        },
-        {
-          "id": "card-pw-temp-history",
-          "type": "history-graph",
-          "config": {
-            "title": "Temperature History — 48h",
-            "entities": [
-              { "entity": "sensor.living_room_temperature", "name": "Living Room" },
-              { "entity": "sensor.outdoor_temperature", "name": "Outdoor" },
-              { "entity": "sensor.master_bedroom_temperature", "name": "Bedroom" }
-            ],
-            "hours_to_show": 48
-          }
-        }
-      ]
-    },
-    {
-      "id": "view-energy-pw",
+      "id": "view-desk-energy",
       "title": "Energy",
-      "path": "energy",
+      "path": "desk-energy",
       "icon": "mdi:lightning-bolt",
-      "layout": "masonry",
+      "viewType": "masonry",
       "cards": [
         {
-          "id": "card-pw-solar-gauge",
+          "id": "card-de-now",
+          "type": "sensor",
+          "colSpan": 2,
+          "config": {"entity": "sensor.power_consumption", "name": "Now (W)", "graph": "line"}
+        },
+        {
+          "id": "card-de-today",
+          "type": "sensor",
+          "colSpan": 2,
+          "config": {"entity": "sensor.energy_today", "name": "Today (kWh)"}
+        },
+        {
+          "id": "card-de-month",
+          "type": "sensor",
+          "colSpan": 2,
+          "config": {"entity": "sensor.energy_month", "name": "Month (kWh)"}
+        },
+        {
+          "id": "card-de-solar",
+          "type": "sensor",
+          "colSpan": 2,
+          "config": {"entity": "sensor.solar_power", "name": "Solar (W)", "graph": "line"}
+        },
+        {
+          "id": "card-de-cost",
+          "type": "sensor",
+          "colSpan": 2,
+          "config": {"entity": "sensor.energy_cost_month", "name": "Cost ($)"}
+        },
+        {
+          "id": "card-de-battery",
           "type": "gauge",
-          "config": {
-            "entity": "sensor.solar_power",
-            "name": "Solar",
-            "min": 0,
-            "max": 5000,
-            "unit": "W",
-            "severity": { "green": 2000, "yellow": 500, "red": 0 }
-          }
+          "colSpan": 2,
+          "config": {"entity": "sensor.battery_level", "name": "Battery", "min": 0, "max": 100, "unit": "%"}
         },
         {
-          "id": "card-pw-usage-gauge",
-          "type": "gauge",
+          "id": "card-de-power-graph",
+          "type": "statistics-graph",
+          "colSpan": 8,
           "config": {
-            "entity": "sensor.power_consumption",
-            "name": "Consumption",
-            "min": 0,
-            "max": 5000,
-            "unit": "W",
-            "severity": { "green": 0, "yellow": 2000, "red": 3500 }
-          }
-        },
-        {
-          "id": "card-pw-energy-entities",
-          "type": "entities",
-          "config": {
-            "title": "Energy Meters",
+            "title": "Power vs Solar",
             "entities": [
-              "sensor.energy_daily",
-              "sensor.solar_power",
-              "sensor.power_consumption",
-              "sensor.washing_machine_power"
-            ]
-          }
-        },
-        {
-          "id": "card-pw-power-history",
-          "type": "history-graph",
-          "config": {
-            "title": "Power — 7 Days",
-            "entities": [
-              { "entity": "sensor.solar_power", "name": "Solar" },
-              { "entity": "sensor.power_consumption", "name": "Usage" }
+              {"entity": "sensor.power_consumption", "name": "Consumption"},
+              {"entity": "sensor.solar_power", "name": "Solar"}
             ],
-            "hours_to_show": 168,
-            "refresh_interval": 300
+            "period": "hour",
+            "chart_type": "line",
+            "days_to_show": 1
+          }
+        },
+        {
+          "id": "card-de-appliances",
+          "type": "entities",
+          "colSpan": 4,
+          "config": {
+            "title": "Top Consumers",
+            "entities": [
+              {"entity": "sensor.ac_power", "name": "A/C"},
+              {"entity": "sensor.ev_charger_power", "name": "EV Charger"},
+              {"entity": "sensor.washing_machine_power", "name": "Washer"},
+              {"entity": "sensor.dryer_power", "name": "Dryer"},
+              {"entity": "sensor.oven_power", "name": "Oven"}
+            ]
           }
         }
       ]
     },
     {
-      "id": "view-system",
-      "title": "System",
-      "path": "system",
-      "icon": "mdi:cog",
-      "layout": "masonry",
+      "id": "view-desk-network",
+      "title": "Network",
+      "path": "desk-network",
+      "icon": "mdi:router-network",
+      "viewType": "masonry",
       "cards": [
         {
-          "id": "card-pw-updates",
+          "id": "card-dn-router",
           "type": "entities",
+          "colSpan": 4,
+          "config": {
+            "title": "Network Status",
+            "entities": [
+              {"entity": "sensor.speedtest_download", "name": "Download"},
+              {"entity": "sensor.speedtest_upload", "name": "Upload"},
+              {"entity": "sensor.speedtest_ping", "name": "Ping"},
+              {"entity": "binary_sensor.internet", "name": "Internet"},
+              {"entity": "sensor.connected_devices", "name": "Devices Connected"}
+            ]
+          }
+        },
+        {
+          "id": "card-dn-ha-server",
+          "type": "entities",
+          "colSpan": 4,
+          "config": {
+            "title": "HA Server",
+            "entities": [
+              {"entity": "sensor.processor_use", "name": "CPU"},
+              {"entity": "sensor.memory_use_percent", "name": "RAM"},
+              {"entity": "sensor.disk_use_percent", "name": "Disk"},
+              {"entity": "sensor.processor_temperature", "name": "Temp"},
+              {"entity": "sensor.last_boot", "name": "Last Boot"}
+            ]
+          }
+        },
+        {
+          "id": "card-dn-smart-devices",
+          "type": "entities",
+          "colSpan": 4,
+          "config": {
+            "title": "Smart Devices",
+            "entities": [
+              {"entity": "sensor.zigbee_devices_online", "name": "Zigbee Devices"},
+              {"entity": "sensor.zwave_devices", "name": "Z-Wave Devices"},
+              {"entity": "sensor.wifi_devices", "name": "WiFi Devices"},
+              {"entity": "update.home_assistant_core_update", "name": "HA Update"}
+            ]
+          }
+        },
+        {
+          "id": "card-dn-speed-history",
+          "type": "statistics-graph",
+          "colSpan": 12,
+          "config": {
+            "title": "Internet Speed History",
+            "entities": [
+              {"entity": "sensor.speedtest_download", "name": "Download"},
+              {"entity": "sensor.speedtest_upload", "name": "Upload"}
+            ],
+            "period": "hour",
+            "chart_type": "line",
+            "days_to_show": 7
+          }
+        }
+      ]
+    },
+    {
+      "id": "view-desk-admin",
+      "title": "Admin",
+      "path": "desk-admin",
+      "icon": "mdi:shield-crown",
+      "viewType": "masonry",
+      "cards": [
+        {
+          "id": "card-da-updates",
+          "type": "entities",
+          "colSpan": 6,
           "config": {
             "title": "Updates",
             "entities": [
-              "update.home_assistant_core",
-              "update.hacs",
-              "update.mosquitto_broker"
+              "update.home_assistant_core_update",
+              "update.home_assistant_supervisor_update",
+              "update.home_assistant_os_update"
             ]
           }
         },
         {
-          "id": "card-pw-vacuum",
-          "type": "entity",
-          "config": {
-            "entity": "vacuum.roborock",
-            "name": "Roborock",
-            "icon": "mdi:robot-vacuum"
-          }
-        },
-        {
-          "id": "card-pw-booleans",
+          "id": "card-da-addons",
           "type": "entities",
+          "colSpan": 6,
           "config": {
-            "title": "Modes & Flags",
+            "title": "Add-ons",
             "entities": [
-              "input_boolean.guest_mode",
-              "input_boolean.vacation_mode",
-              "input_boolean.sleep_mode",
-              "input_boolean.do_not_disturb"
-            ],
-            "state_color": true
-          }
-        },
-        {
-          "id": "card-pw-trackers",
-          "type": "entities",
-          "config": {
-            "title": "Device Trackers",
-            "entities": [
-              "device_tracker.john_phone",
-              "device_tracker.sarah_phone",
-              "device_tracker.emma_phone"
+              {"entity": "sensor.mosquitto_broker_cpu", "name": "MQTT CPU"},
+              {"entity": "sensor.zigbee2mqtt_cpu", "name": "Z2M CPU"},
+              {"entity": "sensor.node_red_cpu", "name": "Node-RED CPU"}
             ]
           }
         },
         {
-          "id": "card-pw-batteries",
-          "type": "entities",
+          "id": "card-da-logs",
+          "type": "logbook",
+          "colSpan": 12,
           "config": {
-            "title": "Sensor Batteries",
-            "entities": [
-              "sensor.front_door_battery",
-              "sensor.garage_door_battery"
-            ]
-          }
-        },
-        {
-          "id": "card-pw-air",
-          "type": "entity",
-          "config": {
-            "entity": "sensor.air_quality_pm25",
-            "name": "Air Quality PM2.5",
-            "icon": "mdi:air-filter"
+            "title": "System Log",
+            "hours_to_show": 24
           }
         }
       ]

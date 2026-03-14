@@ -56,7 +56,11 @@ export interface CardConfig {
   type: string;
   config: Record<string, unknown>;
   children?: CardConfig[];
+  /** Grid column span: 1–12 (default 4 = one third of 12-col grid) */
+  colSpan?: number;
 }
+
+export type ViewType = 'masonry' | 'sections' | 'panel';
 
 export interface ViewConfig {
   id: string;
@@ -65,6 +69,8 @@ export interface ViewConfig {
   path?: string;
   cards: CardConfig[];
   layout?: 'masonry' | 'panel' | 'sidebar';
+  /** Lovelace view type emitted in YAML */
+  viewType?: ViewType;
 }
 
 export interface DashboardConfig {

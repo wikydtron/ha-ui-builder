@@ -18,6 +18,7 @@ import { Toolbar } from './Toolbar';
 import { ViewTabs } from './ViewTabs';
 import { CardRenderer } from '../cards/CardRenderer';
 import { useDashboardStore } from '../../store/dashboardStore';
+import { generateId } from '../../utils/ids';
 import { cardSchemas } from '../../schemas';
 import type { CardConfig } from '../../types';
 
@@ -63,7 +64,7 @@ export function AppShell() {
           Object.assign(defaults, data.moduleConfig as object);
         }
         const newCard: CardConfig = {
-          id: crypto.randomUUID(),
+          id: generateId(),
           type: cardType,
           config: defaults,
         };

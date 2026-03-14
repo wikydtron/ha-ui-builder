@@ -74,6 +74,18 @@ function cleanObject(obj: Record<string, unknown>): Record<string, unknown> {
 function cardToLovelace(card: CardConfig): Record<string, unknown> {
   const { type, config, children } = card;
 
+  // RawCardFallback: emit rawConfig directly
+  if (type === 'raw' || (config?.rawConfig && typeof config.rawConfig === 'object' && !cardSchemaKnown(type))) {
+    const raw = config.rawConfig as Record<string, unknown>;
+    // Preserve original type from rawConfig, fall back to card.type
+    const rawType = (raw['type'] as string) || type;
+    const obj: Record<string, unknown> = { type: rawType };
+    for (const [key, value] of Object.entries(raw)) {
+      if (key !== 'type') obj[key] = value;
+    }
+    return cleanObject(obj);
+  }
+
   // Start with type — always present
   const obj: Record<string, unknown> = { type };
 
@@ -81,25 +93,14 @@ function cardToLovelace(card: CardConfig): Record<string, unknown> {
   if (config) {
     for (const [key, value] of Object.entries(config)) {
       if (INTERNAL_FIELDS.has(key)) continue;
-      if (key === 'rawConfig') continue; // handled separately below
+      if (key === 'rawConfig') continue;
       if (value === undefined || value === null) continue;
       if (typeof value === 'string' && value === '') continue;
       obj[key] = value;
     }
   }
 
-  // If this card has rawConfig (unknown card type), merge it
-  if (config?.rawConfig && typeof config.rawConfig === 'object') {
-    const raw = config.rawConfig as Record<string, unknown>;
-    for (const [key, value] of Object.entries(raw)) {
-      if (key !== 'type' && !INTERNAL_FIELDS.has(key)) {
-        obj[key] = value;
-      }
-    }
-  }
-
   // Container cards: children[] → cards: in YAML output
-  // Delete any config.cards that was spread above, then set from children
   if (CONTAINER_CARD_TYPES.has(type)) {
     delete obj['cards'];
     if (children && children.length > 0) {
@@ -108,6 +109,86 @@ function cardToLovelace(card: CardConfig): Record<string, unknown> {
   }
 
   return cleanObject(obj);
+}
+
+/** Check if a card type is "known" (has a rawConfig) */
+function cardSchemaKnown(type: string): boolean {
+  // We do a simple check — unknown types stored via rawConfig
+  // The parser stores unknown types with rawConfig in config
+  return !type.startsWith('custom:') || false;
+}
+
+// ============================================================
+// colSpan grouping: group consecutive cards into stacks
+// ============================================================
+
+interface CardGroup {
+  span: number;
+  cards: CardConfig[];
+}
+
+/**
+ * Group consecutive cards with the same colSpan.
+ * colSpan 12 = always standalone
+ * Other equal spans are grouped together.
+ */
+function groupCardsBySpan(cards: CardConfig[]): CardGroup[] {
+  const groups: CardGroup[] = [];
+
+  for (const card of cards) {
+    const span = card.colSpan ?? 4;
+
+    if (span === 12) {
+      // Full-width always standalone
+      groups.push({ span: 12, cards: [card] });
+    } else {
+      const last = groups[groups.length - 1];
+      if (last && last.span === span && last.span !== 12) {
+        last.cards.push(card);
+      } else {
+        groups.push({ span, cards: [card] });
+      }
+    }
+  }
+
+  return groups;
+}
+
+/**
+ * Convert a group of cards into a Lovelace output item.
+ * - Single card with colSpan 12: emit directly
+ * - Multiple same-span cards: wrap in horizontal-stack
+ * - Mixed (shouldn't happen given grouping): wrap in grid
+ */
+function groupToLovelace(group: CardGroup): Record<string, unknown> | Record<string, unknown>[] {
+  if (group.cards.length === 1) {
+    return cardToLovelace(group.cards[0]);
+  }
+
+  // Multiple cards with same span → horizontal-stack
+  return {
+    type: 'horizontal-stack',
+    cards: group.cards.map(cardToLovelace),
+  };
+}
+
+/**
+ * Convert view cards into Lovelace card array, applying colSpan grouping.
+ */
+function cardsToLovelace(cards: CardConfig[]): Record<string, unknown>[] {
+  const groups = groupCardsBySpan(cards);
+  const result: Record<string, unknown>[] = [];
+
+  for (const group of groups) {
+    const item = groupToLovelace(group);
+    if (Array.isArray(item)) {
+      result.push(...item);
+    } else {
+      result.push(item);
+    }
+  }
+
+  return result;
 }
 
 // ============================================================
@@ -123,16 +204,30 @@ function viewToLovelace(view: ViewConfig): Record<string, unknown> {
   // path is required for HA to navigate — default to slugified title
   obj.path = view.path || view.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
-  // Layout mapping
-  if (view.layout && view.layout !== 'masonry') {
+  // viewType → Lovelace type field
+  const viewType = view.viewType ?? 'masonry';
+  if (viewType === 'masonry') {
+    // masonry is default, no type needed (but we emit it for clarity)
+    obj.type = 'masonry';
+  } else if (viewType === 'sections') {
+    obj.type = 'sections';
+  } else if (viewType === 'panel') {
+    obj.type = 'panel';
+    obj.panel = true;
+  }
+
+  // Fallback: legacy layout field
+  if (!view.viewType && view.layout) {
     if (view.layout === 'panel') {
+      obj.type = 'panel';
       obj.panel = true;
     } else if (view.layout === 'sidebar') {
       obj.type = 'sidebar';
     }
   }
 
-  obj.cards = view.cards.map(cardToLovelace);
+  // Apply colSpan grouping when exporting
+  obj.cards = cardsToLovelace(view.cards);
 
   return cleanObject(obj);
 }

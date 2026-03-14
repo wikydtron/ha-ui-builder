@@ -3,257 +3,243 @@
   "title": "Mushroom Modern",
   "views": [
     {
-      "id": "view-dashboard",
-      "title": "Dashboard",
-      "path": "dashboard",
-      "icon": "mdi:view-dashboard",
-      "layout": "masonry",
+      "id": "view-mushroom-home",
+      "title": "Home",
+      "path": "mushroom-home",
+      "icon": "mdi:home",
+      "viewType": "masonry",
       "cards": [
+        {
+          "id": "card-mushroom-title",
+          "type": "custom:mushroom-title-card",
+          "colSpan": 12,
+          "config": {
+            "title": "Good {{ 'morning' if now().hour < 12 else 'afternoon' if now().hour < 17 else 'evening' }}!",
+            "subtitle": "{{ states('sensor.outdoor_temperature') }}°C • {{ states('weather.home') | title }}"
+          }
+        },
         {
           "id": "card-mushroom-chips",
           "type": "custom:mushroom-chips-card",
+          "colSpan": 12,
           "config": {
-            "alignment": "center",
             "chips": [
-              { "type": "weather", "entity": "weather.home", "show_conditions": true, "show_temperature": true },
-              { "type": "entity", "entity": "alarm_control_panel.home", "icon": "mdi:shield-home" },
-              { "type": "entity", "entity": "person.john", "icon": "mdi:account" },
-              { "type": "entity", "entity": "person.sarah", "icon": "mdi:account" }
+              {
+                "type": "weather",
+                "entity": "weather.home",
+                "show_temperature": true,
+                "show_conditions": true
+              },
+              {
+                "type": "entity",
+                "entity": "alarm_control_panel.home",
+                "icon": "mdi:shield-home",
+                "use_entity_picture": false
+              },
+              {
+                "type": "entity",
+                "entity": "person.john",
+                "use_entity_picture": true
+              },
+              {
+                "type": "entity",
+                "entity": "person.sarah",
+                "use_entity_picture": true
+              }
             ]
           }
         },
         {
           "id": "card-mushroom-light-living",
           "type": "custom:mushroom-light-card",
+          "colSpan": 4,
           "config": {
-            "entity": "light.living_room_main",
+            "entity": "light.living_room",
             "name": "Living Room",
             "show_brightness_control": true,
             "show_color_temp_control": true,
-            "collapsible_controls": true
+            "collapsible_controls": false,
+            "layout": "vertical"
           }
         },
         {
           "id": "card-mushroom-light-kitchen",
           "type": "custom:mushroom-light-card",
+          "colSpan": 4,
           "config": {
-            "entity": "light.kitchen_overhead",
+            "entity": "light.kitchen",
             "name": "Kitchen",
             "show_brightness_control": true,
-            "collapsible_controls": true
-          }
-        },
-        {
-          "id": "card-mushroom-climate",
-          "type": "custom:mushroom-climate-card",
-          "config": {
-            "entity": "climate.living_room",
-            "name": "Living Room",
-            "show_temperature_control": true,
-            "collapsible_controls": true
-          }
-        },
-        {
-          "id": "card-mushroom-entity-solar",
-          "type": "custom:mushroom-entity-card",
-          "config": {
-            "entity": "sensor.solar_power",
-            "name": "Solar",
-            "icon": "mdi:solar-power",
-            "icon_color": "amber",
-            "primary_info": "state",
-            "secondary_info": "name",
-            "layout": "horizontal"
-          }
-        },
-        {
-          "id": "card-mushroom-entity-power",
-          "type": "custom:mushroom-entity-card",
-          "config": {
-            "entity": "sensor.power_consumption",
-            "name": "Usage",
-            "icon": "mdi:lightning-bolt",
-            "icon_color": "blue",
-            "primary_info": "state",
-            "secondary_info": "name",
-            "layout": "horizontal"
-          }
-        }
-      ]
-    },
-    {
-      "id": "view-lights-mushroom",
-      "title": "Lights",
-      "path": "lights",
-      "icon": "mdi:lightbulb",
-      "layout": "masonry",
-      "cards": [
-        {
-          "id": "card-mushroom-light-lamp",
-          "type": "custom:mushroom-light-card",
-          "config": {
-            "entity": "light.living_room_lamp",
-            "name": "Living Room Lamp",
-            "show_brightness_control": true,
-            "show_color_control": true,
-            "collapsible_controls": true
+            "show_color_temp_control": true,
+            "collapsible_controls": false,
+            "layout": "vertical"
           }
         },
         {
           "id": "card-mushroom-light-bedroom",
           "type": "custom:mushroom-light-card",
+          "colSpan": 4,
           "config": {
-            "entity": "light.master_bedroom",
-            "name": "Master Bedroom",
+            "entity": "light.bedroom",
+            "name": "Bedroom",
             "show_brightness_control": true,
             "show_color_temp_control": true,
-            "collapsible_controls": true
+            "collapsible_controls": false,
+            "layout": "vertical"
           }
         },
         {
-          "id": "card-mushroom-light-office",
-          "type": "custom:mushroom-light-card",
-          "config": {
-            "entity": "light.office_desk",
-            "name": "Office",
-            "show_brightness_control": true,
-            "collapsible_controls": true
-          }
-        },
-        {
-          "id": "card-mushroom-light-porch",
-          "type": "custom:mushroom-light-card",
-          "config": {
-            "entity": "light.front_porch",
-            "name": "Front Porch",
-            "show_brightness_control": true,
-            "collapsible_controls": false
-          }
-        },
-        {
-          "id": "card-mushroom-light-patio",
-          "type": "custom:mushroom-light-card",
-          "config": {
-            "entity": "light.backyard_patio",
-            "name": "Patio",
-            "show_brightness_control": true,
-            "collapsible_controls": false
-          }
-        }
-      ]
-    },
-    {
-      "id": "view-climate-mushroom",
-      "title": "Climate",
-      "path": "climate",
-      "icon": "mdi:thermometer",
-      "layout": "masonry",
-      "cards": [
-        {
-          "id": "card-mushroom-climate-living",
+          "id": "card-mushroom-climate",
           "type": "custom:mushroom-climate-card",
+          "colSpan": 6,
           "config": {
             "entity": "climate.living_room",
-            "name": "Living Room",
+            "name": "Living Room Climate",
             "show_temperature_control": true,
-            "collapsible_controls": true
+            "collapsible_controls": false,
+            "hvac_modes": ["off", "heat", "cool", "auto"]
           }
         },
         {
-          "id": "card-mushroom-climate-upstairs",
-          "type": "custom:mushroom-climate-card",
+          "id": "card-mushroom-media",
+          "type": "custom:mushroom-media-player-card",
+          "colSpan": 6,
           "config": {
-            "entity": "climate.upstairs",
-            "name": "Upstairs",
-            "show_temperature_control": true,
-            "collapsible_controls": true
-          }
-        },
-        {
-          "id": "card-mushroom-climate-office",
-          "type": "custom:mushroom-climate-card",
-          "config": {
-            "entity": "climate.office",
-            "name": "Office",
-            "show_temperature_control": true,
-            "collapsible_controls": true
-          }
-        },
-        {
-          "id": "card-mushroom-sensor-temp",
-          "type": "custom:mushroom-entity-card",
-          "config": {
-            "entity": "sensor.outdoor_temperature",
-            "name": "Outdoor Temp",
-            "icon": "mdi:thermometer",
-            "icon_color": "cyan",
-            "layout": "horizontal"
-          }
-        },
-        {
-          "id": "card-mushroom-sensor-humidity",
-          "type": "custom:mushroom-entity-card",
-          "config": {
-            "entity": "sensor.living_room_humidity",
-            "name": "Humidity",
-            "icon": "mdi:water-percent",
-            "icon_color": "blue",
-            "layout": "horizontal"
+            "entity": "media_player.living_room_speaker",
+            "name": "Living Room Speaker",
+            "show_volume_level": true,
+            "media_controls": ["on_off", "previous", "play_pause", "next", "shuffle"],
+            "volume_controls": ["volume_mute", "volume_slider"]
           }
         }
       ]
     },
     {
-      "id": "view-controls-mushroom",
-      "title": "Controls",
-      "path": "controls",
-      "icon": "mdi:tune",
-      "layout": "masonry",
+      "id": "view-mushroom-rooms",
+      "title": "Rooms",
+      "path": "mushroom-rooms",
+      "icon": "mdi:floor-plan",
+      "viewType": "masonry",
       "cards": [
         {
-          "id": "card-mushroom-entity-tv",
-          "type": "custom:mushroom-entity-card",
+          "id": "card-mush-room-living",
+          "type": "custom:mushroom-template-card",
+          "colSpan": 6,
           "config": {
-            "entity": "media_player.living_room_tv",
-            "name": "Living Room TV",
-            "icon": "mdi:television",
-            "layout": "horizontal"
+            "primary": "Living Room",
+            "secondary": "{{ states('sensor.living_room_temperature') }}°C • {{ states('light.living_room') | title }}",
+            "icon": "mdi:sofa",
+            "icon_color": "{% if is_state('light.living_room', 'on') %}amber{% else %}grey{% endif %}",
+            "tap_action": {"action": "navigate", "navigation_path": "/lovelace/lights"}
           }
         },
         {
-          "id": "card-mushroom-lock-front",
-          "type": "custom:mushroom-entity-card",
+          "id": "card-mush-room-bedroom",
+          "type": "custom:mushroom-template-card",
+          "colSpan": 6,
           "config": {
-            "entity": "lock.front_door",
-            "name": "Front Door",
-            "icon": "mdi:door-closed-lock",
-            "icon_color": "green",
-            "tap_action": { "action": "toggle" },
-            "layout": "horizontal"
+            "primary": "Bedroom",
+            "secondary": "{{ states('sensor.bedroom_temperature') }}°C • {{ states('light.bedroom') | title }}",
+            "icon": "mdi:bed",
+            "icon_color": "{% if is_state('light.bedroom', 'on') %}blue{% else %}grey{% endif %}",
+            "tap_action": {"action": "navigate", "navigation_path": "/lovelace/rooms"}
           }
         },
         {
-          "id": "card-mushroom-vacuum",
-          "type": "custom:mushroom-vacuum-card",
+          "id": "card-mush-room-kitchen",
+          "type": "custom:mushroom-template-card",
+          "colSpan": 4,
           "config": {
-            "entity": "vacuum.roborock",
-            "name": "Roborock"
+            "primary": "Kitchen",
+            "secondary": "{{ states('sensor.kitchen_temperature') }}°C",
+            "icon": "mdi:chef-hat",
+            "icon_color": "orange"
           }
         },
         {
-          "id": "card-mushroom-person-john",
+          "id": "card-mush-room-office",
+          "type": "custom:mushroom-template-card",
+          "colSpan": 4,
+          "config": {
+            "primary": "Office",
+            "secondary": "CO₂: {{ states('sensor.office_co2') }} ppm",
+            "icon": "mdi:desk",
+            "icon_color": "{% if states('sensor.office_co2') | int > 1000 %}red{% else %}green{% endif %}"
+          }
+        },
+        {
+          "id": "card-mush-room-bathroom",
+          "type": "custom:mushroom-template-card",
+          "colSpan": 4,
+          "config": {
+            "primary": "Bathroom",
+            "secondary": "Humidity: {{ states('sensor.bathroom_humidity') }}%",
+            "icon": "mdi:shower",
+            "icon_color": "{% if states('sensor.bathroom_humidity') | int > 70 %}blue{% else %}grey{% endif %}"
+          }
+        }
+      ]
+    },
+    {
+      "id": "view-mushroom-settings",
+      "title": "Settings",
+      "path": "mushroom-settings",
+      "icon": "mdi:cog",
+      "viewType": "masonry",
+      "cards": [
+        {
+          "id": "card-mush-persons",
           "type": "custom:mushroom-person-card",
+          "colSpan": 4,
           "config": {
             "entity": "person.john",
-            "name": "John"
+            "name": "John",
+            "use_entity_picture": true,
+            "tap_action": {"action": "more-info"}
           }
         },
         {
-          "id": "card-mushroom-person-sarah",
+          "id": "card-mush-persons-sarah",
           "type": "custom:mushroom-person-card",
+          "colSpan": 4,
           "config": {
             "entity": "person.sarah",
-            "name": "Sarah"
+            "name": "Sarah",
+            "use_entity_picture": true,
+            "tap_action": {"action": "more-info"}
+          }
+        },
+        {
+          "id": "card-mush-alarm",
+          "type": "custom:mushroom-alarm-control-panel-card",
+          "colSpan": 4,
+          "config": {
+            "entity": "alarm_control_panel.home",
+            "name": "Home Alarm",
+            "states": ["armed_away", "armed_home", "disarmed"],
+            "layout": "vertical"
+          }
+        },
+        {
+          "id": "card-mush-automations",
+          "type": "custom:mushroom-entity-card",
+          "colSpan": 6,
+          "config": {
+            "entity": "automation.evening_lights",
+            "name": "Evening Lights",
+            "icon": "mdi:weather-sunset",
+            "tap_action": {"action": "toggle"}
+          }
+        },
+        {
+          "id": "card-mush-scenes",
+          "type": "custom:mushroom-entity-card",
+          "colSpan": 6,
+          "config": {
+            "entity": "scene.movie_time",
+            "name": "Movie Time",
+            "icon": "mdi:movie",
+            "tap_action": {"action": "call-service", "service": "scene.turn_on", "target": {"entity_id": "scene.movie_time"}}
           }
         }
       ]

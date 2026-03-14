@@ -3,6 +3,27 @@ import { Plus } from 'lucide-react';
 import { useDashboardStore } from '../../store/dashboardStore';
 import { SortableCard } from './SortableCard';
 
+// Tailwind col-span classes must be listed explicitly so the purger keeps them
+const COL_SPAN_CLASSES: Record<number, string> = {
+  1: 'col-span-1',
+  2: 'col-span-2',
+  3: 'col-span-3',
+  4: 'col-span-4',
+  5: 'col-span-5',
+  6: 'col-span-6',
+  7: 'col-span-7',
+  8: 'col-span-8',
+  9: 'col-span-9',
+  10: 'col-span-10',
+  11: 'col-span-11',
+  12: 'col-span-12',
+};
+
+export function getColSpanClass(colSpan?: number): string {
+  const n = colSpan ?? 4;
+  return COL_SPAN_CLASSES[n] ?? 'col-span-4';
+}
+
 export function Canvas() {
   const { dashboard, activeViewId, selectCard, selectedCardId } = useDashboardStore();
 
@@ -24,14 +45,18 @@ export function Canvas() {
         <EmptyCanvas />
       ) : (
         <SortableContext items={cards.map((c) => c.id)} strategy={rectSortingStrategy}>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl mx-auto">
+          <div className="grid grid-cols-12 gap-4 max-w-7xl mx-auto">
             {cards.map((card) => (
-              <SortableCard
+              <div
                 key={card.id}
-                card={card}
-                isSelected={card.id === selectedCardId}
-                onSelect={() => selectCard(card.id)}
-              />
+                className={getColSpanClass(card.colSpan)}
+              >
+                <SortableCard
+                  card={card}
+                  isSelected={card.id === selectedCardId}
+                  onSelect={() => selectCard(card.id)}
+                />
+              </div>
             ))}
           </div>
         </SortableContext>

@@ -5,7 +5,7 @@ import { useDashboardStore } from '../../store/dashboardStore';
 import { useModuleStore } from '../../store/moduleStore';
 import { CardRenderer } from '../cards/CardRenderer';
 import type { CardConfig } from '../../types';
-import { useState } from 'react';
+import { useState, useRef, useCallback } from 'react';
 
 interface SortableCardProps {
   card: CardConfig;
@@ -14,9 +14,12 @@ interface SortableCardProps {
 }
 
 export function SortableCard({ card, isSelected, onSelect }: SortableCardProps) {
-  const { removeCard, duplicateCard, activeViewId } = useDashboardStore();
+  const { removeCard, duplicateCard, updateCardColSpan, activeViewId } = useDashboardStore();
   const { saveModule } = useModuleStore();
   const [showSaveModule, setShowSaveModule] = useState(false);
+  const resizeStartX = useRef<number | null>(null);
+  const resizeStartSpan = useRef<number>(card.colSpan ?? 4);
+  const cardRef = useRef<HTMLDivElement>(null);
 
   const {
     attributes,
@@ -48,15 +51,47 @@ export function SortableCard({ card, isSelected, onSelect }: SortableCardProps) 
     setShowSaveModule(false);
   };
 
-  // Determine column span for layout cards
-  const isLayoutCard = ['vertical-stack', 'horizontal-stack', 'grid'].includes(card.type);
-  const colSpanClass = isLayoutCard ? 'md:col-span-2 lg:col-span-2' : '';
+  // Resize handle: drag right edge to adjust colSpan 1–12
+  const handleResizeMouseDown = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      resizeStartX.current = e.clientX;
+      resizeStartSpan.current = card.colSpan ?? 4;
+
+      const containerWidth = cardRef.current?.closest('.grid')?.clientWidth ?? 900;
+      const colWidth = containerWidth / 12;
+
+      const onMouseMove = (ev: MouseEvent) => {
+        if (resizeStartX.current === null) return;
+        const dx = ev.clientX - resizeStartX.current;
+        const deltaCols = Math.round(dx / colWidth);
+        const newSpan = Math.max(1, Math.min(12, resizeStartSpan.current + deltaCols));
+        updateCardColSpan(activeViewId, card.id, newSpan);
+      };
+
+      const onMouseUp = () => {
+        resizeStartX.current = null;
+        window.removeEventListener('mousemove', onMouseMove);
+        window.removeEventListener('mouseup', onMouseUp);
+      };
+
+      window.addEventListener('mousemove', onMouseMove);
+      window.addEventListener('mouseup', onMouseUp);
+    },
+    [card.id, card.colSpan, activeViewId, updateCardColSpan],
+  );
+
+  const currentSpan = card.colSpan ?? 4;
 
   return (
     <div
-      ref={setNodeRef}
+      ref={(node) => {
+        setNodeRef(node);
+        (cardRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+      }}
       style={style}
-      className={`relative group ${colSpanClass}`}
+      className="relative group h-full"
       onClick={(e) => {
         e.stopPropagation();
         onSelect();
@@ -64,12 +99,19 @@ export function SortableCard({ card, isSelected, onSelect }: SortableCardProps) 
     >
       {/* Selection ring */}
       <div
-        className={`rounded-xl transition-all ${
+        className={`rounded-xl transition-all h-full ${
           isSelected ? 'ring-2 ring-ha-blue ring-offset-1 ring-offset-ha-bg' : ''
         }`}
       >
         <CardRenderer card={card} />
       </div>
+
+      {/* Column count badge (visible when selected) */}
+      {isSelected && (
+        <div className="absolute top-1 left-1 bg-ha-blue text-white text-[10px] font-bold px-1.5 py-0.5 rounded z-10 pointer-events-none">
+          {currentSpan}/12
+        </div>
+      )}
 
       {/* Hover toolbar */}
       <div className="absolute -top-3 right-2 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity bg-ha-toolbar border border-ha-border rounded-md shadow-lg overflow-hidden z-10">
@@ -104,6 +146,15 @@ export function SortableCard({ card, isSelected, onSelect }: SortableCardProps) 
         >
           <Trash2 size={12} />
         </button>
+      </div>
+
+      {/* Resize handle (right edge) */}
+      <div
+        className="absolute top-0 right-0 w-2 h-full cursor-col-resize opacity-0 group-hover:opacity-100 transition-opacity z-10 flex items-center justify-center"
+        onMouseDown={handleResizeMouseDown}
+        title="Drag to resize"
+      >
+        <div className="w-1 h-8 bg-ha-blue rounded-full opacity-70" />
       </div>
 
       {/* Save as module dialog */}
