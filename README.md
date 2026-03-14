@@ -9,7 +9,7 @@
 [![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
-[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
+[![License](https://img.shields.io/badge/License-Personal%20Use%20Only-orange?style=for-the-badge)](LICENSE)
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-%E2%98%95-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://paypal.me/theboss3dfactory/)
 
 **A modern, visual drag-and-drop editor for Home Assistant Lovelace dashboards.**  
@@ -276,7 +276,7 @@ Pull requests are welcome. For major changes, open an issue first to discuss wha
 
 ## 📄 License
 
-MIT — see [LICENSE](LICENSE) for details.
+Source available — personal and non-commercial use only. See [LICENSE](LICENSE) for details. For commercial licensing: info@thebossfactory.ca
 
 ---
 

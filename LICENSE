@@ -1,0 +1,26 @@
+Copyright (c) 2026 The Boss Factory. All rights reserved.
+
+SOURCE AVAILABLE LICENSE — PERSONAL USE ONLY
+
+Permission is granted, free of charge, to any individual to:
+  - View and study this source code
+  - Self-host this software for personal, non-commercial use
+  - Submit pull requests and contribute improvements
+
+The following are strictly prohibited without prior written permission
+from the copyright holder:
+  - Commercial use of this software or any derivative work
+  - Offering this software or a derivative as a hosted/SaaS product
+  - Redistribution, resale, or sublicensing
+  - Using this code as a base for a competing product
+  - Removing or altering this license notice
+
+"Personal, non-commercial use" means running this software for your
+own private Home Assistant setup. It does not include use within a
+business, for clients, or in any revenue-generating context.
+
+For commercial licensing inquiries, contact: info@thebossfactory.ca
+
+THIS SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
+THE AUTHORS ARE NOT LIABLE FOR ANY CLAIM OR DAMAGES ARISING FROM
+USE OF THIS SOFTWARE.
