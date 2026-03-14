@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 160" width="600" height="160">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#1a1a2e"/>
+      <stop offset="100%" stop-color="#16213e"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#03a9f4"/>
+      <stop offset="100%" stop-color="#0288d1"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <!-- Background -->
+  <rect width="600" height="160" rx="16" fill="url(#bg)"/>
+  <!-- Icon box -->
+  <rect x="20" y="30" width="100" height="100" rx="16" fill="url(#accent)" filter="url(#glow)"/>
+  <!-- Grid lines on icon -->
+  <line x1="50" y1="30" x2="50" y2="130" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+  <line x1="80" y1="30" x2="80" y2="130" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+  <line x1="110" y1="30" x2="110" y2="130" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+  <line x1="20" y1="63" x2="120" y2="63" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+  <line x1="20" y1="97" x2="120" y2="97" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+  <!-- Card blocks on icon -->
+  <rect x="28" y="38" width="55" height="18" rx="4" fill="rgba(255,255,255,0.9)"/>
+  <rect x="88" y="38" width="25" height="18" rx="4" fill="rgba(255,255,255,0.6)"/>
+  <rect x="28" y="70" width="25" height="18" rx="4" fill="rgba(255,255,255,0.6)"/>
+  <rect x="58" y="70" width="55" height="18" rx="4" fill="rgba(255,255,255,0.9)"/>
+  <rect x="28" y="102" width="85" height="18" rx="4" fill="rgba(255,255,255,0.7)"/>
+  <!-- Title -->
+  <text x="140" y="78" font-family="system-ui,-apple-system,sans-serif" font-size="36" font-weight="700" fill="#e1e1e1">HA Dashboard</text>
+  <text x="140" y="116" font-family="system-ui,-apple-system,sans-serif" font-size="36" font-weight="700" fill="url(#accent)">Builder</text>
+  <!-- Tagline -->
+  <text x="142" y="140" font-family="system-ui,-apple-system,sans-serif" font-size="14" fill="#9e9e9e" letter-spacing="1">Visual Lovelace Dashboard Editor for Home Assistant</text>
+</svg>
